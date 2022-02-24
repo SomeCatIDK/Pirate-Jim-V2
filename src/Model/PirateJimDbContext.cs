@@ -34,5 +34,5 @@ public class GuildTimeoutChannel
 {
     [Key]
     public ulong ChannelId { get; set; }
-    public uint Time { get; set; }
+    public int Time { get; set; }
 }

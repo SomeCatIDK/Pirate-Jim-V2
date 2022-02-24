@@ -23,7 +23,7 @@ namespace SomeCatIDK.PirateJim.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<uint>("Time")
+                    b.Property<int>("Time")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("ChannelId");
