@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Discord;
 using Discord.Interactions;
 
 namespace SomeCatIDK.PirateJim.Services;

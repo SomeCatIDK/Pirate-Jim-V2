@@ -4,9 +4,11 @@ using SomeCatIDK.PirateJim.Model;
 
 namespace SomeCatIDK.PirateJim.Modules;
 
+// ReSharper disable twice StringLiteralTypo
+[Group("slowmode", "Controls the slowmode properties of a channel.")]
 public class UserTimeoutCommandModule : InteractionModuleBase
 {
-    [SlashCommand("paddchanneltimeout", "Adds a timeout to a channel in seconds.")]
+    [SlashCommand("add", "Adds a timeout to a channel in seconds.")]
     public async Task AddChannelTimeout([ChannelTypes(ChannelType.Text)] IChannel channel, int timeout)
     {
         if (timeout == 0)
@@ -47,7 +49,7 @@ public class UserTimeoutCommandModule : InteractionModuleBase
         await db.SaveChangesAsync();
     }
 
-    [SlashCommand("premovechanneltimeout", "Removes a timeout from a channel.")]
+    [SlashCommand("remove", "Removes a timeout to a channel.")]
     public async Task RemoveChannelTimeout([ChannelTypes(ChannelType.Text)] IChannel channel)
     {
         await using var db = new PirateJimDbContext();
@@ -64,6 +66,26 @@ public class UserTimeoutCommandModule : InteractionModuleBase
         db.GuildTimeoutChannels.Remove(timeoutChannel);
 
         await RespondAsync("The specified channel no longer has a timeout.");
+        await db.SaveChangesAsync();
+    }
+
+    [SlashCommand("reset", "Removes a timeout to a channel.")]
+    public async Task ResetUserTimeout([ChannelTypes(ChannelType.Text)] IChannel channel, IUser user)
+    {
+        await using var db = new PirateJimDbContext();
+
+        var userTimeout = db.UserTimeouts
+            .FirstOrDefault(x => x.ChannelId == channel.Id && x.UserId == user.Id);
+
+        if (userTimeout == null)
+        {
+            await RespondAsync("The specified user does not have a timeout in that channel.");
+            return;
+        }
+
+        db.UserTimeouts.Remove(userTimeout);
+        
+        await RespondAsync("The specified user no longer has a timeout in that channel.");
         await db.SaveChangesAsync();
     }
 }
