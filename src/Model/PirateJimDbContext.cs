@@ -16,7 +16,8 @@ public class PirateJimDbContext : DbContext
         _dbPath = Path.Join(path, "PirateJim.db");
     }
 
-    // Set primary key for UserTimeouts to be both the ChannelID and the UserID
+    // Set primary key for UserTimeouts to be both the ChannelID and the UserID since neither are unique by themselves,
+    // but are always unique when compounded.
     protected override void OnModelCreating(ModelBuilder modelBuilder)
         => modelBuilder.Entity<UserTimeout>().HasKey(x => new { x.ChannelId, x.UserId });
 
@@ -33,7 +34,7 @@ public class UserTimeout
 
 public class GuildTimeoutChannel
 {
-    // Just ChannelID as the primary key, since there shouldn't be any duplicate entries.
+    // Set ChannelID as the primary key, as it should be 100% unique in the database.
     [Key]
     public ulong ChannelId { get; set; }
     public int Time { get; set; }
