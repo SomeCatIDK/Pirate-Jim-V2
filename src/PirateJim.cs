@@ -28,6 +28,8 @@ public sealed class PirateJim
         // TODO: Make it so a guild can disable/enable these as it needs.
         _services.Add(new CommandInteractionService(this));
         _services.Add(new UserTimeoutService(this));
+        _services.Add(new AttachmentChannelService(this));
+        _services.Add(new RatingChannelService(this));
         
 #if DEBUG
         await DiscordClient.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("PirateJimDebugToken"));
@@ -36,6 +38,8 @@ public sealed class PirateJim
 #endif
         
         await DiscordClient.StartAsync();
+
+        await DiscordClient.SetGameAsync("V2 time!");
         
         // Keep current Task alive to prevent program from closing.
         await Task.Delay(-1);

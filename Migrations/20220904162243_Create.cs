@@ -10,12 +10,36 @@ namespace SomeCatIDK.PirateJim.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "GuildAttachmentChannels",
+                columns: table => new
+                {
+                    ChannelId = table.Column<ulong>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GuildAttachmentChannels", x => x.ChannelId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "GuildRatingChannels",
+                columns: table => new
+                {
+                    ChannelId = table.Column<ulong>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GuildRatingChannels", x => x.ChannelId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "GuildTimeoutChannels",
                 columns: table => new
                 {
                     ChannelId = table.Column<ulong>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Time = table.Column<uint>(type: "INTEGER", nullable: false)
+                    Time = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -38,6 +62,12 @@ namespace SomeCatIDK.PirateJim.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "GuildAttachmentChannels");
+
+            migrationBuilder.DropTable(
+                name: "GuildRatingChannels");
+
             migrationBuilder.DropTable(
                 name: "GuildTimeoutChannels");
 

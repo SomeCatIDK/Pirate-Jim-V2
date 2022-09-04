@@ -21,14 +21,14 @@ public class CommandInteractionService : IService
     {
         // Initialize all "modules" in the entry assembly.
         await _interactionService.AddModulesAsync(Assembly.GetEntryAssembly(), null);
-        
+
 #if DEBUG
         // In a test environment, register commands to test guild.
         // Used instead of global call because the global call can take up to an hour to fully propagate to all guilds.
         await _interactionService.RegisterCommandsToGuildAsync(ulong.Parse(Environment.GetEnvironmentVariable("PirateJimDebugGuild")!));
 #else
         // In a production environment, register commands to all guilds.
-        await interactionService.RegisterCommandsGloballyAsync();
+        await _interactionService.RegisterCommandsGloballyAsync();
 #endif
 
         // According to Discord.NET, this should not be required, but it doesn't work without it.

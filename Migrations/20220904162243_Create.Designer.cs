@@ -11,13 +11,35 @@ using SomeCatIDK.PirateJim.Model;
 namespace SomeCatIDK.PirateJim.Migrations
 {
     [DbContext(typeof(PirateJimDbContext))]
-    [Migration("20220224215021_Create")]
+    [Migration("20220904162243_Create")]
     partial class Create
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "6.0.2");
+            modelBuilder.HasAnnotation("ProductVersion", "6.0.8");
+
+            modelBuilder.Entity("SomeCatIDK.PirateJim.Model.GuildAttachmentChannel", b =>
+                {
+                    b.Property<ulong>("ChannelId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ChannelId");
+
+                    b.ToTable("GuildAttachmentChannels");
+                });
+
+            modelBuilder.Entity("SomeCatIDK.PirateJim.Model.GuildRatingChannel", b =>
+                {
+                    b.Property<ulong>("ChannelId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ChannelId");
+
+                    b.ToTable("GuildRatingChannels");
+                });
 
             modelBuilder.Entity("SomeCatIDK.PirateJim.Model.GuildTimeoutChannel", b =>
                 {
@@ -25,7 +47,7 @@ namespace SomeCatIDK.PirateJim.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<uint>("Time")
+                    b.Property<int>("Time")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("ChannelId");

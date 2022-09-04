@@ -15,7 +15,29 @@ namespace SomeCatIDK.PirateJim.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "6.0.2");
+            modelBuilder.HasAnnotation("ProductVersion", "6.0.8");
+
+            modelBuilder.Entity("SomeCatIDK.PirateJim.Model.GuildAttachmentChannel", b =>
+                {
+                    b.Property<ulong>("ChannelId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ChannelId");
+
+                    b.ToTable("GuildAttachmentChannels");
+                });
+
+            modelBuilder.Entity("SomeCatIDK.PirateJim.Model.GuildRatingChannel", b =>
+                {
+                    b.Property<ulong>("ChannelId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ChannelId");
+
+                    b.ToTable("GuildRatingChannels");
+                });
 
             modelBuilder.Entity("SomeCatIDK.PirateJim.Model.GuildTimeoutChannel", b =>
                 {
