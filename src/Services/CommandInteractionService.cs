@@ -21,8 +21,6 @@ public class CommandInteractionService : IService
     {
         // Initialize all "modules" in the entry assembly.
         
-        await _interactionService.RegisterCommandsToGuildAsync(ulong.Parse(Environment.GetEnvironmentVariable("PirateJimDebugGuild")!));
-        
         await _interactionService.AddModulesAsync(Assembly.GetEntryAssembly(), null);
         
 //#if DEBUG
