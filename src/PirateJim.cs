@@ -29,7 +29,7 @@ public sealed class PirateJim
         _services.Add(new CommandInteractionService(this));
         _services.Add(new UserTimeoutService(this));
         _services.Add(new AttachmentChannelService(this));
-        _services.Add(new RatingChannelService(this));
+        //_services.Add(new RatingChannelService(this));
         
 #if DEBUG
         await DiscordClient.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("PirateJimDebugToken"));
