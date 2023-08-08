@@ -17,7 +17,7 @@ public sealed class PirateJim
         // GuildBans is currently unused, but I don't want to forget about it later.
         var discordConfig = new DiscordSocketConfig
         {
-            GatewayIntents = GatewayIntents.Guilds | GatewayIntents.GuildBans | GatewayIntents.GuildMessages | GatewayIntents.GuildMembers
+            GatewayIntents = GatewayIntents.Guilds | GatewayIntents.GuildBans | GatewayIntents.GuildMessages | GatewayIntents.GuildMembers | GatewayIntents.MessageContent
         };
 
         DiscordClient = new DiscordSocketClient(discordConfig);
