@@ -7,7 +7,7 @@ namespace SomeCatIDK.PirateJim.Services;
 // This service listens for user messages deletes any that don't have exactly 1 embeddable attachment
 public class AttachmentChannelService : IService
 {
-    private string[] _allowedExtensions = { ".jpg", ".jpeg", ".png", "mp4", ".gif", ".gifv", ".mp3", ".wav", ".ogg" };
+    private readonly string[] _allowedExtensions = { ".jpg", ".jpeg", ".png", ".mp4", ".gif", ".gifv", ".mp3", ".wav", ".ogg" };
         
     public AttachmentChannelService(PirateJim bot)
     {
@@ -37,15 +37,15 @@ public class AttachmentChannelService : IService
         if (attachmentChannel == null)
             return;
 
-        if (message.Attachments.Count == 1)
+        if (message.Attachments.Count is >= 1 and <= 4)
         {
-            var fileName = message.Attachments.First().Filename.ToLowerInvariant();
-            var match = _allowedExtensions.Any(t => fileName.EndsWith(t));
+            foreach (var attachment in message.Attachments)
+            {
+                var fileName = attachment.Filename.ToLowerInvariant();
 
-            if (match)
-                return;
-
-            await message.DeleteAsync();
+                if (!_allowedExtensions.Any(t => fileName.EndsWith(t)))
+                    await message.DeleteAsync();
+            }
         }
         else
         {

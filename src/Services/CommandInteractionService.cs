@@ -20,8 +20,11 @@ public class CommandInteractionService : IService
     private async Task OnReady()
     {
         // Initialize all "modules" in the entry assembly.
+        
+        await _interactionService.RegisterCommandsToGuildAsync(ulong.Parse(Environment.GetEnvironmentVariable("PirateJimDebugGuild")!));
+        
         await _interactionService.AddModulesAsync(Assembly.GetEntryAssembly(), null);
-
+        
 #if DEBUG
         // In a test environment, register commands to test guild.
         // Used instead of global call because the global call can take up to an hour to fully propagate to all guilds.

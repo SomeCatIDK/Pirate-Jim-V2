@@ -13,7 +13,7 @@ public class AttachmentChannelCommandModule : InteractionModuleBase
     public async Task EnableAttachmentChannel([ChannelTypes(ChannelType.Text)] IChannel channel)
     {
         await using var db = new PirateJimDbContext();
-        
+
         var attachmentChannel = db.GuildAttachmentChannels
             .FirstOrDefault(x => x.ChannelId == channel.Id);
 

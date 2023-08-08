@@ -11,12 +11,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Discord.Net" Version="3.8.0" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.8">
+      <PackageReference Include="Discord.Net" Version="3.11.0" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.21">
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         <PrivateAssets>all</PrivateAssets>
       </PackageReference>
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.8" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.21" />
     </ItemGroup>
 
     <ItemGroup>
