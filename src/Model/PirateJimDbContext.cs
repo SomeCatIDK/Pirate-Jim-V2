@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.IO;
 using Microsoft.EntityFrameworkCore;
 
 namespace SomeCatIDK.PirateJim.Model;

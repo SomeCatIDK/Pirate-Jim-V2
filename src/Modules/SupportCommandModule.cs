@@ -1,14 +1,13 @@
-﻿using Discord;
-using Discord.Interactions;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Discord;
+using Discord.Interactions;
+using Newtonsoft.Json.Linq;
 
-namespace SomeCatIDK.PirateJim.src.Modules
+namespace SomeCatIDK.PirateJim.Modules
 {
     public class SupportCommandModule : InteractionModuleBase
     {
@@ -18,16 +17,16 @@ namespace SomeCatIDK.PirateJim.src.Modules
         {
             try
             {
-                HttpWebRequest request = WebRequest.CreateHttp($"https://support.smartlydressedgames.com/api/v2/help_center/articles/search?query={Uri.EscapeUriString(search)}");
+                var request = WebRequest.CreateHttp($"https://support.smartlydressedgames.com/api/v2/help_center/articles/search?query={Uri.EscapeUriString(search)}");
                 request.Method = "GET";
                 request.ContentType = "application/json";
 
                 var res = (HttpWebResponse)(await request.GetResponseAsync());
 
-                using StreamReader readStream = new StreamReader(res.GetResponseStream(), Encoding.UTF8);
+                using var readStream = new StreamReader(res.GetResponseStream(), Encoding.UTF8);
                 {
-                    var zendeskRes = JObject.Parse(readStream.ReadToEnd());
-                    JArray articles = (JArray)zendeskRes["results"];
+                    var zendeskRes = JObject.Parse(await readStream.ReadToEndAsync());
+                    var articles = (JArray)zendeskRes["results"]!;
                     if (articles.Count < 1)
                     {
                         await RespondAsync("Could not find the proper article.");
@@ -36,7 +35,7 @@ namespace SomeCatIDK.PirateJim.src.Modules
                     var embed = new EmbedBuilder()
                     {
                         Title = "Found SDG Article",
-                        Description = $"[{articles[0]["name"].ToObject<string>()}]({articles[0]["html-url"].ToObject<string>()})",
+                        Description = $"[{articles[0]["name"]!.ToObject<string>()}]({articles[0]["html-url"]!.ToObject<string>()})",
                         Color = Color.DarkGrey
                     };
                     await RespondAsync(embed: embed.Build());

@@ -4,7 +4,6 @@
         <OutputType>Exe</OutputType>
         <TargetFramework>net7.0</TargetFramework>
         <RootNamespace>SomeCatIDK.PirateJim</RootNamespace>
-        <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <AssemblyName>PirateJim</AssemblyName>
         <LangVersion>11</LangVersion>

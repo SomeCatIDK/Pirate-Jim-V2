@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+
 namespace SomeCatIDK.PirateJim;
 
 public static class Program
