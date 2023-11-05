@@ -13,7 +13,7 @@ namespace SomeCatIDK.PirateJim.Modules
     {
         [RequireRole(553316077636157451)] //supporter role
         [SlashCommand("article", "Finds a support article relevant to the search query.")]
-        public async Task GetZendeskArticle([ChannelTypes(ChannelType.Text, ChannelType.Forum, ChannelType.PublicThread, ChannelType.PrivateThread)] IChannel channel, string search)
+        public async Task GetZendeskArticle(string search)
         {
             try
             {
