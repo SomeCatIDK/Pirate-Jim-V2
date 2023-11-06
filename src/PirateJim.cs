@@ -34,11 +34,7 @@ public sealed class PirateJim
         _services.Add(new AttachmentChannelService(this));
         _services.Add(new RatingChannelService(this));
         
-#if DEBUG
-        await DiscordClient.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("PirateJimDebugToken"));
-#else
-        await DiscordClient.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("PirateJimToken"));
-#endif
+        await DiscordClient.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("PJ_TOKEN"));
         
         await DiscordClient.StartAsync();
 

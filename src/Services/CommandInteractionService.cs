@@ -22,17 +22,17 @@ public class CommandInteractionService : IService
     private async Task OnReady()
     {
         // Initialize all "modules" in the entry assembly.
-        
+        // TODO: GetEntryAssembly() will return the incorrect assembly if the bot is used as a library instead of an executable.
         await _interactionService.AddModulesAsync(Assembly.GetEntryAssembly(), null);
         
-#if DEBUG
+//#if DEBUG
         // In a test environment, register commands to test guild.
         // Used instead of global call because the global call can take up to an hour to fully propagate to all guilds.
-        await _interactionService.RegisterCommandsToGuildAsync(ulong.Parse(Environment.GetEnvironmentVariable("PirateJimDebugGuild")!));
-#else
+        await _interactionService.RegisterCommandsToGuildAsync(ulong.Parse(Environment.GetEnvironmentVariable("PJ_GUILD")!));
+//#else
         // In a production environment, register commands to all guilds.
-        await _interactionService.RegisterCommandsGloballyAsync();
-#endif
+        //await _interactionService.RegisterCommandsGloballyAsync();
+//#endif
 
         // According to Discord.NET, this should not be required, but it doesn't work without it.
         // Thanks StackOverflow for the snippet <3
