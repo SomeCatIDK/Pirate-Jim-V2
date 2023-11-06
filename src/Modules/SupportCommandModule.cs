@@ -16,6 +16,7 @@ namespace SomeCatIDK.PirateJim.Modules
         {
             try
             {
+                // TODO: Replace with HttpClient
                 var request = WebRequest.CreateHttp($"https://support.smartlydressedgames.com/api/v2/help_center/articles/search?query={Uri.EscapeDataString(search)}");
                 
                 request.Method = "GET";
