@@ -27,7 +27,7 @@ public class RatingChannelService : IService
             return;
 
         // Not sure if a cast check is required, but may as well.
-        if (message.Author is not SocketGuildUser author)
+        if (message.Author is not SocketGuildUser)
             return;
 
         await using var db = new PirateJimDbContext();
