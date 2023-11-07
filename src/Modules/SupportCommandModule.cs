@@ -70,8 +70,8 @@ public class SupportCommandModule : InteractionModuleBase
 
             using var readStream = new StreamReader(res.GetResponseStream(), Encoding.UTF8);
 
-            var zendeskRes = JObject.Parse(await readStream.ReadToEndAsync());
-            var articles = (JArray)zendeskRes["results"]!;
+            var docsRes = JObject.Parse(await readStream.ReadToEndAsync());
+            var articles = (JArray)docsRes["results"]!;
 
             if (articles.Count == 0)
             {
@@ -98,4 +98,3 @@ public class SupportCommandModule : InteractionModuleBase
         }
     }
 }
-
