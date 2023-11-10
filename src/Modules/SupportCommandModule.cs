@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
@@ -95,6 +96,25 @@ public class SupportCommandModule : InteractionModuleBase
             Console.WriteLine(e.StackTrace);
 
             await RespondAsync("Failed to get an article from Read the Docs. (internal error)");
+        }
+    }
+
+    [SlashCommand("unity", "Replies with the latest Unity version for Unturned.")]
+    public async Task GetUnityVersion()
+    {
+        try
+        {
+            using var client = new HttpClient();
+            var content = (await client.GetStringAsync("https://raw.githubusercontent.com/Unturned-Datamining/Unturned-Datamining/linux-client-preview/.unityversion"));
+
+            await RespondAsync($"The 'preview' branch of Unturned is using Unity version **{content}**.");
+        }
+        catch(Exception e) 
+        {
+            Console.WriteLine(e.Message);
+            Console.WriteLine(e.StackTrace);
+
+            await RespondAsync("Failed to get Unity version from GitHub Unturned-Datamining. (internal error)");
         }
     }
 }
