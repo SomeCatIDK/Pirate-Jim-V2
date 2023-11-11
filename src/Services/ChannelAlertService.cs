@@ -1,4 +1,5 @@
-﻿using Discord.WebSocket;
+﻿using Discord.Rest;
+using Discord.WebSocket;
 using SomeCatIDK.PirateJim.Model;
 using SomeCatIDK.PirateJim.Services;
 using SomeCatIDK.PirateJim.src.Model;
@@ -27,16 +28,26 @@ namespace SomeCatIDK.PirateJim.src.Services
 
             if (message.Channel.Id == UOChannels.Trading && !message.Author.IsBot)
             {
-                await message.Channel.SendMessageAsync(TradingAlertMessage);
+                RestUserMessage sentMessage = await message.Channel.SendMessageAsync(TradingAlertMessage);
                 CachedMessage? cachedMessage = db.CachedMessages.FirstOrDefault(x => x.UserId == PirateJim.BotId && x.ChannelId == UOChannels.Trading);
                 if (cachedMessage != null)
                 {
                     await message.Channel.DeleteMessageAsync(cachedMessage.MessageId);
                     db.CachedMessages.Remove(cachedMessage);
                 }
-
+                await db.CachedMessages.AddAsync(new CachedMessage() { MessageId = sentMessage.Id, ChannelId = sentMessage.Channel.Id, UserId = sentMessage.Author.Id });
             }
-
+            else if (message.Channel.Id == UOChannels.Advertising && !message.Author.IsBot)
+            {
+                RestUserMessage sentMessage = await message.Channel.SendMessageAsync(AdvertingAlertMessage);
+                CachedMessage? cachedMessage = db.CachedMessages.FirstOrDefault(x => x.UserId == PirateJim.BotId && x.ChannelId == UOChannels.Advertising);
+                if (cachedMessage != null)
+                {
+                    await message.Channel.DeleteMessageAsync(cachedMessage.MessageId);
+                    db.CachedMessages.Remove(cachedMessage);
+                }
+                await db.CachedMessages.AddAsync(new CachedMessage() { MessageId = sentMessage.Id, ChannelId = sentMessage.Channel.Id, UserId = sentMessage.Author.Id });
+            }
 
 
             await Task.CompletedTask;
