@@ -117,4 +117,15 @@ public class SupportCommandModule : InteractionModuleBase
             await RespondAsync("Failed to get Unity version from GitHub Unturned-Datamining. (internal error)");
         }
     }
+
+    [SlashCommand("gameban", "Sends information on gamebans and how they should be appealed.")]
+    public async Task SendGamebanInfo(IGuildUser? user = null)
+    {
+        string alert = "### Do not use this Discord for appealing gamebans. 🛑\n[Contact BattlEye](https://www.battleye.com/support/) to appeal gamebans. Further information is provided on the [SDG Support Site](https://support.smartlydressedgames.com/hc/en-us/articles/12082986788884)";
+
+        if (user != null)
+            await RespondAsync($"{user.Mention}\n{alert}");
+        else
+            await RespondAsync(alert);
+    }
 }
