@@ -11,6 +11,7 @@ public class PirateJimDbContext : DbContext
     public DbSet<UserTimeout> UserTimeouts { get; set; } = null!;
     public DbSet<GuildAttachmentChannel> GuildAttachmentChannels { get; set; } = null!;
     public DbSet<GuildRatingChannel> GuildRatingChannels { get; set; } = null!;
+    public DbSet<CachedMessage> CachedMessages { get; set; } = null!;
 
     private readonly string _dbPath;
 
@@ -53,5 +54,13 @@ public class GuildRatingChannel
 public class GuildAttachmentChannel
 {
     [Key]
+    public ulong ChannelId { get; set; }
+}
+
+public class CachedMessage
+{
+    [Key]
+    public ulong MessageId { get; set; }
+    public ulong UserId { get; set; }
     public ulong ChannelId { get; set; }
 }

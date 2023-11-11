@@ -4,11 +4,13 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 using SomeCatIDK.PirateJim.Services;
+using SomeCatIDK.PirateJim.src.Services;
 
 namespace SomeCatIDK.PirateJim;
 
 public sealed class PirateJim
 {
+    public const ulong BotId = 553384844919439360;
     public DiscordSocketClient DiscordClient { get; private set; } = null!;
 
     // These are unused at the moment, will have uses later.
@@ -34,6 +36,7 @@ public sealed class PirateJim
         _services.Add(new AttachmentChannelService(this));
         _services.Add(new RatingChannelService(this));
         _services.Add(new SurvivorRoleService(this));
+        _services.Add(new ChannelAlertService(this));
         
         await DiscordClient.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("PJ_TOKEN"));
         
