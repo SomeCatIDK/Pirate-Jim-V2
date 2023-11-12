@@ -58,6 +58,18 @@ namespace SomeCatIDK.PirateJim.Migrations
                 {
                     table.PrimaryKey("PK_UserTimeouts", x => new { x.ChannelId, x.UserId });
                 });
+             migrationBuilder.CreateTable(
+                name: "CachedMessages",
+                columns: table => new
+                {
+                    MessageId = table.Column<ulong>(type: "INTEGER", nullable: false),
+                    UserId = table.Column<ulong>(type: "INTEGER", nullable: false),
+                    ChannelId = table.Column<ulong>(type: "INTEGER", nullable: false),
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserTimeouts", x => x.MessageId);
+                });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -73,6 +85,9 @@ namespace SomeCatIDK.PirateJim.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserTimeouts");
+
+            migrationBuilder.DropTable(
+                name: "CachedMessages");
         }
     }
 }

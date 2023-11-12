@@ -68,6 +68,21 @@ namespace SomeCatIDK.PirateJim.Migrations
 
                     b.ToTable("UserTimeouts");
                 });
+            modelBuilder.Entity("SomeCatIDK.PirateJim.Model.CachedMessage", b =>
+                {
+                    b.Property<ulong>("MessageId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<ulong>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<ulong>("ChannelId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("MessageId");
+
+                    b.ToTable("CachedMessages");
+                });
 #pragma warning restore 612, 618
         }
     }
