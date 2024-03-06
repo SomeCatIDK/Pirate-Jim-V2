@@ -87,7 +87,7 @@ public class ThreadChannelCommandModule : InteractionModuleBase
 
     [RequireRole(UORoles.ModerationTeam)]
     [SlashCommand("threadunban", "Revokes the threads banned role from the specified user.")]
-    public async Task ThreadUnbanUser(IGuildUser user)
+    public async Task ThreadUnbanUser(IGuildUser user, string? reason)
     {
         await user.RemoveRoleAsync(UORoles.ThreadsBanned);
 
@@ -95,7 +95,7 @@ public class ThreadChannelCommandModule : InteractionModuleBase
 
         await modlogChannel!.SendMessageAsync(embed: new EmbedBuilder()
            .WithTitle("threadsunban")
-           .WithDescription($"**Offender:** {user.GlobalName} (`{user.Id}`).\n**Responsible moderator:** {Context.User.GlobalName} (`{Context.User.Id}`)")
+           .WithDescription($"**Offender:** {user.GlobalName} (`{user.Id}`)." + reason != null ? $"\n**Reason:** {reason}" : "\n**Reason:** *No specified reason.*" + $"\n**Responsible moderator:** {Context.User.GlobalName} (`{Context.User.Id}`)")
            .WithCurrentTimestamp()
            .WithColor(Color.Green)
            .Build());
