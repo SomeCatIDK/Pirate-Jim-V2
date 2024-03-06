@@ -31,14 +31,14 @@ public class AttachmentChannelCommandModule : InteractionModuleBase
 
         await db.SaveChangesAsync();
     }
-    
+
     [RequireOwner(Group = "ManageChannels")]
     [RequireUserPermission(ChannelPermission.ManageChannels, Group = "ManageChannels")]
     [SlashCommand("disable", "Disables an attachment channel.")]
     public async Task DisableAttachmentChannel([ChannelTypes(ChannelType.Text)] IChannel channel)
     {
         await using var db = new PirateJimDbContext();
-        
+
         var attachmentChannel = db.GuildAttachmentChannels
             .FirstOrDefault(x => x.ChannelId == channel.Id);
 
