@@ -43,6 +43,7 @@ public class AdvertisingMessageService : IService
         LastMessage = msg.Id;
 
         await Task.CompletedTask;
+        //idk
     }
 }
 
