@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 using SomeCatIDK.PirateJim.Services;
+using SomeCatIDK.PirateJim.src.Services;
 
 namespace SomeCatIDK.PirateJim;
 
@@ -34,6 +35,7 @@ public sealed class PirateJim
         _services.Add(new AttachmentChannelService(this));
         _services.Add(new RatingChannelService(this));
         _services.Add(new SurvivorRoleService(this));
+        _services.Add(new AdvertisingMessageService(this));
         
         await DiscordClient.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("PJ_TOKEN"));
         
