@@ -41,6 +41,8 @@ public class AdvertisingMessageService : IService
             await message.Channel.DeleteMessageAsync(LastMessage.Value);
 
         LastMessage = msg.Id;
+
+        await Task.CompletedTask;
     }
 }
 
