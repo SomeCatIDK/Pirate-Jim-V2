@@ -33,9 +33,12 @@ public sealed class PirateJim
         _services.Add(new CommandInteractionService(this));
         _services.Add(new UserTimeoutService(this));
         _services.Add(new AttachmentChannelService(this));
+        var appealsService = new AppealsAutoCloseService(this);
+        await appealsService.InitializeAsync(this);
+        _services.Add(appealsService);
         _services.Add(new RatingChannelService(this));
         _services.Add(new SurvivorRoleService(this));
-        _services.Add(new AdvertisingMessageService(this));
+        _services.Add(new AutomaticMessageService(this));
         
         await DiscordClient.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("PJ_TOKEN"));
         
