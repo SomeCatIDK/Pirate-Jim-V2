@@ -25,8 +25,12 @@ public class AppealsAutoCloseService : IService
         if (channel is not IForumChannel forum)
             return;
 
+
         foreach (var post in await forum.GetActiveThreadsAsync())
         {
+            if (post.IsLocked) 
+                continue;
+
             if ((DateTime.Now - post.CreatedAt.DateTime).TotalDays >= 4.9)
             {
                 await post.SendMessageAsync(LockedMessage);
