@@ -18,6 +18,34 @@ public class AutomaticMessageService : IService
     public AutomaticMessageService(PirateJim bot)
     {
         bot.DiscordClient.MessageReceived += OnMessage;
+        bot.DiscordClient.MessageUpdated += OnMessageUpdate;
+    }
+
+    private async Task OnMessageUpdate(Cacheable<IMessage, ulong> cacheable, SocketMessage message, ISocketMessageChannel channel)
+    {
+        // Message was not sent by a user.
+        if (message.Source != MessageSource.User)
+            return;
+
+        // Not sure if a cast check is required, but may as well.
+        if (message.Author is not SocketGuildUser author)
+            return;
+
+        switch (message.Channel.Id)
+        {
+            case UOChannels.Modding:
+                //This is more of a joke thing. We normally start a chain of messages in #modding that is just the word 'modding'.
+                //Underestimated their ability to misuse this feature.
+                if (message.Content.ToLowerInvariant().Contains("modding") && message.Content.Length < 10)
+                {
+                    await message.AddReactionAsync(new Emoji("♥"));
+                }
+                else
+                {
+                    await message.RemoveAllReactionsForEmoteAsync(new Emoji("♥"));
+                }
+                break;
+        }
     }
 
     private async Task OnMessage(SocketMessage message)
@@ -50,6 +78,7 @@ public class AutomaticMessageService : IService
                 break;
             case UOChannels.Modding:
                 //This is more of a joke thing. We normally start a chain of messages in #modding that is just the word 'modding'.
+                //Underestimated their ability to misuse this feature.
                 if (message.Content.ToLowerInvariant().Contains("modding") && message.Content.Length < 10)
                 {
                     await message.AddReactionAsync(new Emoji("♥"));
