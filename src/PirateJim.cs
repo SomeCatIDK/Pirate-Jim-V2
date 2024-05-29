@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 using SomeCatIDK.PirateJim.Services;
-using SomeCatIDK.PirateJim.src.Services;
 
 namespace SomeCatIDK.PirateJim;
 
@@ -34,7 +33,6 @@ public sealed class PirateJim
         _services.Add(new UserTimeoutService(this));
         _services.Add(new AttachmentChannelService(this));
         var appealsService = new AppealsAutoCloseService(this);
-        await appealsService.InitializeAsync(this);
         _services.Add(appealsService);
         _services.Add(new RatingChannelService(this));
         _services.Add(new SurvivorRoleService(this));
@@ -45,6 +43,8 @@ public sealed class PirateJim
         await DiscordClient.StartAsync();
 
         await DiscordClient.SetGameAsync("V2 time!");
+        
+        await appealsService.InitializeAsync(this);
         
         // Keep current Task alive to prevent program from closing.
         await Task.Delay(-1);

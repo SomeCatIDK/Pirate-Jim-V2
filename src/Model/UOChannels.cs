@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SomeCatIDK.PirateJim.src.Model;
+﻿namespace SomeCatIDK.PirateJim.Model;
 
 public static class UOChannels
 {

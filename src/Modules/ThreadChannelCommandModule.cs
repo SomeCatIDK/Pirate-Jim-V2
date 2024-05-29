@@ -1,13 +1,10 @@
-﻿using Discord;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using Discord;
 using Discord.Interactions;
 using SomeCatIDK.PirateJim.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace SomeCatIDK.PirateJim.src.Modules;
+namespace SomeCatIDK.PirateJim.Modules;
 
 [Group("thread", "Commands that manage threads.")]
 public class ThreadChannelCommandModule : InteractionModuleBase

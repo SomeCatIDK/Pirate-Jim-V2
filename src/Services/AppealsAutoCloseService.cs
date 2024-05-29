@@ -1,13 +1,9 @@
-﻿using Discord;
-using SomeCatIDK.PirateJim.Services;
-using SomeCatIDK.PirateJim.src.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
 using System.Threading.Tasks;
+using Discord;
+using SomeCatIDK.PirateJim.Model;
 
-namespace SomeCatIDK.PirateJim.src.Services;
+namespace SomeCatIDK.PirateJim.Services;
 
 public class AppealsAutoCloseService : IService
 {

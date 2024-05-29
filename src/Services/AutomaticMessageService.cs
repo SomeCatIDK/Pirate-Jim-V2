@@ -1,15 +1,9 @@
-﻿
+﻿using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
-using SomeCatIDK.PirateJim.Services;
-using SomeCatIDK.PirateJim.src.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SomeCatIDK.PirateJim.Model;
 
-namespace SomeCatIDK.PirateJim.src.Services;
+namespace SomeCatIDK.PirateJim.Services;
 
 public class AutomaticMessageService : IService
 {
