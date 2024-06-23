@@ -1,11 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <OutputType>Lib</OutputType>
         <TargetFramework>net7.0</TargetFramework>
         <RootNamespace>PirateJim.Unturned</RootNamespace>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Core\PirateJim.csproj" />
+    </ItemGroup>
 
 </Project>
