@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 using SomeCatIDK.PirateJim.Services;
+using SomeCatIDK.PirateJim.src.Services;
 
 namespace SomeCatIDK.PirateJim;
 
@@ -37,6 +38,8 @@ public sealed class PirateJim
         _services.Add(new RatingChannelService(this));
         _services.Add(new SurvivorRoleService(this));
         _services.Add(new AutomaticMessageService(this));
+        var guideTagService = new RemoveInvalidGuideTagService(this);
+        _services.Add(guideTagService);
         
         await DiscordClient.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("PJ_TOKEN"));
         
@@ -45,7 +48,9 @@ public sealed class PirateJim
         await DiscordClient.SetGameAsync("V2 time!");
         
         await appealsService.InitializeAsync(this);
-        
+
+        await guideTagService.InitializeAsync();
+
         // Keep current Task alive to prevent program from closing.
         await Task.Delay(-1);
     }
