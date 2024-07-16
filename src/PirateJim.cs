@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 using SomeCatIDK.PirateJim.Services;
-using SomeCatIDK.PirateJim.src.Services;
 
 namespace SomeCatIDK.PirateJim;
 
