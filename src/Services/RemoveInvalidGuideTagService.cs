@@ -59,9 +59,12 @@ public class RemoveInvalidGuideTagService : IService
 
     private async Task RemoveInvalidGuideTagAsync(SocketThreadChannel post)
     {
-        if (!_guideTagIds.TryGetValue(post.ParentChannel.Id, out ulong guideTagId))
+        if (post.AppliedTags == null)
             return;
 
+        if (!_guideTagIds.TryGetValue(post.ParentChannel.Id, out var guideTagId))
+            return;
+        
         if (!post.AppliedTags.Contains(guideTagId))
             return;
 
