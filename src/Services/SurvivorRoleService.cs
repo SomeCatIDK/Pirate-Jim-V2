@@ -13,6 +13,7 @@ public class SurvivorRoleService : IService
         bot.DiscordClient.MessageReceived += OnMessage;
     }
 
+    // ReSharper disable once MemberCanBeMadeStatic.Local
     private async Task OnMessage(SocketMessage message)
     {
         if (message.Source != MessageSource.User)

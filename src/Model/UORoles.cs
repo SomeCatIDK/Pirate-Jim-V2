@@ -1,10 +1,14 @@
 ﻿namespace SomeCatIDK.PirateJim.Model;
 
+// ReSharper disable InconsistentNaming
+// ReSharper disable UnusedMember.Global
+// ReSharper disable MemberCanBePrivate.Global
+
 public static class UORoles
 {
     public const ulong SDG = 324232061093412867;
     public const ulong ModerationTeam = 326108032067174411;
-    public const ulong Adminstrator = 324230861245513729;
+    public const ulong Administrator = 324230861245513729;
     public const ulong Moderator = 324230866702434305;
     public const ulong JuniorModerator = 900374139452395530;
     public const ulong Supporter = 553316077636157451;

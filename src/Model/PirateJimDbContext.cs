@@ -5,6 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SomeCatIDK.PirateJim.Model;
 
+// ReSharper disable PropertyCanBeMadeInitOnly.Global
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
+
 public class PirateJimDbContext : DbContext
 {
     public DbSet<GuildTimeoutChannel> GuildTimeoutChannels  { get; set; } = null!;

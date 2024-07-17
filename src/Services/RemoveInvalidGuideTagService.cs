@@ -12,7 +12,7 @@ public class RemoveInvalidGuideTagService : IService
 {
     private const string GuideTag = "Guide";
 
-    private Dictionary<ulong, ulong> _guideTagIds = new Dictionary<ulong, ulong>();
+    private readonly Dictionary<ulong, ulong> _guideTagIds = new();
 
     private readonly PirateJim _bot;
 
@@ -59,6 +59,12 @@ public class RemoveInvalidGuideTagService : IService
 
     private async Task RemoveInvalidGuideTagAsync(SocketThreadChannel post)
     {
+        if (post.Owner == null)
+        {
+            Console.WriteLine($"Post owner is null. Post Name: {post.Name} | Post Channel: {post.ParentChannel.Name}");
+            return;
+        }
+
         if (post.AppliedTags == null)
             return;
 
@@ -67,12 +73,13 @@ public class RemoveInvalidGuideTagService : IService
         
         if (!post.AppliedTags.Contains(guideTagId))
             return;
-
-        if (post.Owner.GuildUser.GuildPermissions.ManageThreads)
+        
+        if (!post.Owner.GuildUser.GuildPermissions.ManageThreads)
             return;
 
         var newTags = post.AppliedTags.ToList();
         newTags.Remove(guideTagId);
-        await post.ModifyAsync((post) => post.AppliedTags = newTags);
+        
+        await post.ModifyAsync(postProperties => postProperties.AppliedTags = newTags);
     }
 }

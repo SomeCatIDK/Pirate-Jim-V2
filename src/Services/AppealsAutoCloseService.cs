@@ -7,6 +7,7 @@ namespace SomeCatIDK.PirateJim.Services;
 
 public class AppealsAutoCloseService : IService
 {
+    // ReSharper disable once MemberCanBePrivate.Global
     public const string LockedMessage = "**This post is now locked.**\n\nWe automatically lock every appeal after five days.";
 
     public AppealsAutoCloseService(PirateJim bot)
@@ -27,11 +28,11 @@ public class AppealsAutoCloseService : IService
             if (post.IsLocked) 
                 continue;
 
-            if ((DateTime.Now - post.CreatedAt.DateTime).TotalDays >= 4.9)
-            {
-                await post.SendMessageAsync(LockedMessage);
-                await post.ModifyAsync((prop) => prop.Locked = true);
-            }
+            if (!((DateTime.Now - post.CreatedAt.DateTime).TotalDays >= 4.9))
+                continue;
+            
+            await post.SendMessageAsync(LockedMessage);
+            await post.ModifyAsync((prop) => prop.Locked = true);
         }
     }
 }

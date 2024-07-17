@@ -1,5 +1,8 @@
 ﻿namespace SomeCatIDK.PirateJim.Model;
 
+// ReSharper disable InconsistentNaming
+// ReSharper disable UnusedMember.Global
+
 public static class UOChannels
 {
     /// <summary>

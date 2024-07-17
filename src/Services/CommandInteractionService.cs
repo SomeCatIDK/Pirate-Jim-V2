@@ -25,6 +25,8 @@ public class CommandInteractionService : IService
         // TODO: GetEntryAssembly() will return the incorrect assembly if the bot is used as a library instead of an executable.
         await _interactionService.AddModulesAsync(Assembly.GetEntryAssembly(), null);
         
+        // TODO: Use global initializer instead.
+        
 //#if DEBUG
         // In a test environment, register commands to test guild.
         // Used instead of global call because the global call can take up to an hour to fully propagate to all guilds.

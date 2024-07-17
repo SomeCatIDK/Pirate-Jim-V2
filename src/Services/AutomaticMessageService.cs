@@ -5,6 +5,8 @@ using SomeCatIDK.PirateJim.Model;
 
 namespace SomeCatIDK.PirateJim.Services;
 
+// ReSharper disable MemberCanBePrivate.Global
+
 public class AutomaticMessageService : IService
 {
     public const string AdvertisingMessage = "Welcome to #advertising.\n\nPlease note that you may only post advertisements **every 23 hours**. Advertisements should not promote servers that:\n- Are not relevant to the game *Unturned*.\n- Promote the usage of game cheats.\n- Actively go against [Server Hosting Rules](<https://docs.smartlydressedgames.com/en/stable/servers/server-hosting-rules.html>).\n- Use workarounds to avoid copyright claims, host bans, or other consequences regarding illegal or disallowed practices (i.e. having players manually install workshop mods).";
@@ -21,6 +23,7 @@ public class AutomaticMessageService : IService
         bot.DiscordClient.MessageUpdated += OnMessageUpdate;
     }
 
+    // ReSharper disable once MemberCanBeMadeStatic.Local
     private async Task OnMessageUpdate(Cacheable<IMessage, ulong> cacheable, SocketMessage message, ISocketMessageChannel channel)
     {
         // Message was not sent by a user.
@@ -34,8 +37,8 @@ public class AutomaticMessageService : IService
         switch (message.Channel.Id)
         {
             case UOChannels.Modding:
-                //This is more of a joke thing. We normally start a chain of messages in #modding that is just the word 'modding'.
-                //Underestimated their ability to misuse this feature.
+                // This is more of a joke thing. We normally start a chain of messages in #modding that is just the word 'modding'.
+                // Underestimated their ability to misuse this feature.
                 if (message.Content.ToLowerInvariant().Contains("modding") && message.Content.Length < 10)
                 {
                     await message.AddReactionAsync(new Emoji("♥"));
@@ -77,8 +80,8 @@ public class AutomaticMessageService : IService
                 LastTradingMessage = secondMsg.Id;
                 break;
             case UOChannels.Modding:
-                //This is more of a joke thing. We normally start a chain of messages in #modding that is just the word 'modding'.
-                //Underestimated their ability to misuse this feature.
+                // This is more of a joke thing. We normally start a chain of messages in #modding that is just the word 'modding'.
+                // Underestimated their ability to misuse this feature.
                 if (message.Content.ToLowerInvariant().Contains("modding") && message.Content.Length < 10)
                 {
                     await message.AddReactionAsync(new Emoji("♥"));
@@ -87,7 +90,6 @@ public class AutomaticMessageService : IService
         }
 
         await Task.CompletedTask;
-        //idk
     }
 }
 

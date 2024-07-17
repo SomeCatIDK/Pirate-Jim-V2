@@ -13,6 +13,8 @@ namespace SomeCatIDK.PirateJim.Modules;
 [Group("support", "Provides useful commands for survivors and supporters.")]
 public class SupportCommandModule : InteractionModuleBase
 {
+#pragma warning disable SYSLIB0014
+    
     [SlashCommand("article", "Finds a SDG support article relevant to the search query.")]
     public async Task GetZendeskArticle(string search)
     {
@@ -98,7 +100,9 @@ public class SupportCommandModule : InteractionModuleBase
             await RespondAsync("Failed to get an article from Read the Docs. (internal error)");
         }
     }
-
+    
+#pragma warning restore SYSLIB0014
+    
     [SlashCommand("unity", "Replies with the latest Unity version for Unturned.")]
     public async Task GetUnityVersion()
     {
