@@ -4,8 +4,6 @@ using System.Threading.Tasks;
 using GenHTTP.Api.Content;
 using GenHTTP.Api.Protocol;
 using GenHTTP.Modules.Conversion.Providers.Json;
-using GenHTTP.Modules.IO.Streaming;
-using GenHTTP.Modules.IO.Strings;
 using Newtonsoft.Json;
 using SomeCatIDK.PirateJim.HTTP.Model;
 
@@ -13,8 +11,6 @@ namespace SomeCatIDK.PirateJim.HTTP;
 
 public class JsonErrorMapper : IErrorMapper<Exception>
 {
-    private record ErrorModel(string Message);
-    
     public ValueTask<IResponse?> Map(IRequest request, IHandler handler, Exception error)
     {
         var response = new Response(500, DateTime.UtcNow, JsonConvert.SerializeObject(error));
