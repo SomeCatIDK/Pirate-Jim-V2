@@ -27,7 +27,7 @@ public class PirateREST
         Host.Create()
             .Handler(testService)
             .Defaults()
-            .Port(80)
+            .Port(8080)
             .Run();
     }
 }
