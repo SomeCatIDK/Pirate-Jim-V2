@@ -14,7 +14,7 @@ public sealed class PirateJim
     public DiscordSocketClient DiscordClient { get; private set; } = null!;
 
     // These are unused at the moment, will have uses later.
-    private readonly List<IService> _services = new();
+    private readonly List<IService> _services = [];
     public IEnumerable<IService> Services => _services.AsReadOnly();
 
     public async Task Initialize()
