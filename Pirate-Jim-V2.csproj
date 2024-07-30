@@ -16,6 +16,20 @@
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         <PrivateAssets>all</PrivateAssets>
       </PackageReference>
+		<PackageReference Include="GenHTTP.Core" Version="8.0.0" />
+		<PackageReference Include="GenHTTP.Modules.Webservices" Version="8.0.0" />
+		<PackageReference Include="GenHTTP.Modules.Security" Version="8.0.0" />
+		<PackageReference Include="GenHTTP.Modules.Layouting" Version="8.0.0" />
+		<PackageReference Include="GenHTTP.Modules.Practices" Version="8.0.0" />
+		<PackageReference Include="GenHTTP.Modules.ClientCaching" Version="8.0.0" />
+		<PackageReference Include="GenHTTP.Modules.Reflection" Version="8.0.0" />
+		<PackageReference Include="GenHTTP.Modules.ErrorHandling" Version="8.0.0" />
+		<PackageReference Include="GenHTTP.Modules.Pages" Version="8.0.0" />
+		<PackageReference Include="GenHTTP.Modules.IO" Version="8.0.0" />
+		<PackageReference Include="GenHTTP.Api" Version="8.0.0" />
+		<PackageReference Include="GenHTTP.Modules.Basics" Version="8.0.1" />
+		<PackageReference Include="GenHTTP.Modules.Placeholders" Version="8.0.0" />
+		<PackageReference Include="GenHTTP.Modules.Authentication" Version="8.0.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.7" />
     </ItemGroup>
 
