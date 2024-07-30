@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
+using SomeCatIDK.PirateJim.Model;
 using SomeCatIDK.PirateJim.Services;
 
 namespace SomeCatIDK.PirateJim;
@@ -36,9 +38,13 @@ public sealed class PirateJim
         _services.Add(appealsService);
         _services.Add(new RatingChannelService(this));
         _services.Add(new SurvivorRoleService(this));
+        
         _services.Add(new AutomaticMessageService(this));
-        var guideTagService = new RemoveInvalidGuideTagService(this);
-        _services.Add(guideTagService);
+
+        DiscordClient.MessageReceived += InviteChecker;
+        
+        //var guideTagService = new RemoveInvalidGuideTagService(this);
+        //_services.Add(guideTagService);
         
         await DiscordClient.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("PJ_TOKEN"));
         
@@ -48,11 +54,39 @@ public sealed class PirateJim
         
         await appealsService.InitializeAsync(this);
 
-        await guideTagService.InitializeAsync();
+        //await guideTagService.InitializeAsync();
 
         // Keep current Task alive to prevent program from closing.
         await Task.Delay(-1);
     }
+
+    // TODO: move this somewhere else and refine it.
+    private static async Task InviteChecker(SocketMessage message)
+    {
+        if (message.Author is not SocketGuildUser author)
+            return;
+
+        if (message.Channel.Id == UOChannels.Advertising)
+            return;
+        
+        var roles = new[]
+        {
+            UORoles.SDG,
+            UORoles.ModerationTeam,
+            UORoles.Supporter
+        };
+
+        // Checks to see if the user has any roles defined the in `roles` local variable.
+        // This syntax is hellish, but it's only one line.
+        if (author.Roles.Select(x => x.Id).Any(roles.Contains))
+            return;
+        
+        if (!message.Content.ToLowerInvariant().Contains("discord.gg/"))
+            return;
+        
+        await message.DeleteAsync();
+    }
+    
     
     // TODO: Expand into proper console/file logging.
     private static async Task OnLog(LogMessage msg)
