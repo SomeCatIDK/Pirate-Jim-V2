@@ -74,7 +74,7 @@ public class RemoveInvalidGuideTagService : IService
         if (!post.AppliedTags.Contains(guideTagId))
             return;
         
-        if (!post.Owner.GuildUser.GuildPermissions.ManageThreads)
+        if (post.Owner.GuildUser.GuildPermissions.ManageThreads)
             return;
 
         var newTags = post.AppliedTags.ToList();

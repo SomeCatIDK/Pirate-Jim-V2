@@ -43,8 +43,8 @@ public sealed class PirateJim
 
         DiscordClient.MessageReceived += InviteChecker;
         
-        //var guideTagService = new RemoveInvalidGuideTagService(this);
-        //_services.Add(guideTagService);
+        var guideTagService = new RemoveInvalidGuideTagService(this);
+        _services.Add(guideTagService);
         
         await DiscordClient.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("PJ_TOKEN"));
         
