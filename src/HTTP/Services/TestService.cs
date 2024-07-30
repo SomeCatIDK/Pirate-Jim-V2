@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Text.Json;
 using GenHTTP.Api.Protocol;
+using GenHTTP.Modules.Conversion.Providers.Json;
 using GenHTTP.Modules.Webservices;
-using Newtonsoft.Json;
 using SomeCatIDK.PirateJim.HTTP.Model;
 
 namespace SomeCatIDK.PirateJim.HTTP.Services;
@@ -10,11 +11,14 @@ public class TestService
 {
     private const string Message = "This is a test of PirateREST";
     
-    [ResourceMethod(RequestMethod.GET)]
-    public string GetTest(IRequest request)
+    [ResourceMethod]
+    public IResponse GetTest(IRequest request)
     {
-        var content = JsonConvert.SerializeObject(new Response(200, DateTime.UtcNow, Message), Formatting.Indented);
+        var response = new Response(200, DateTime.UtcNow, Message);
 
-        return content;
+        return request.Respond()
+            .Content(new JsonContent(response, JsonSerializerOptions.Default))
+            .Type(FlexibleContentType.Get(ContentType.ApplicationJson))
+            .Build();
     }
 }
