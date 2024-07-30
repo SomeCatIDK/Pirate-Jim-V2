@@ -17,7 +17,7 @@ public class JsonErrorMapper : IErrorMapper<Exception>
     
     public ValueTask<IResponse?> Map(IRequest request, IHandler handler, Exception error)
     {
-        var response = new Response(500, DateTime.Now, JsonConvert.SerializeObject(error));
+        var response = new Response(500, DateTime.UtcNow, JsonConvert.SerializeObject(error));
 
         return new ValueTask<IResponse?>(request.Respond()
             .Status(ResponseStatus.InternalServerError)
@@ -29,7 +29,7 @@ public class JsonErrorMapper : IErrorMapper<Exception>
 
     public ValueTask<IResponse?> GetNotFound(IRequest request, IHandler handler)
     {
-        var response = new Response(404, DateTime.Now, JsonConvert.SerializeObject("The requested endpoint does not exist."));
+        var response = new Response(404, DateTime.UtcNow, JsonConvert.SerializeObject("The requested endpoint does not exist."));
         
         return new ValueTask<IResponse?>(request.Respond()
             .Status(ResponseStatus.NotFound)

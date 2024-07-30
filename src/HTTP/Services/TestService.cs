@@ -13,7 +13,7 @@ public class TestService
     [ResourceMethod(RequestMethod.GET)]
     public string GetTest(IRequest request)
     {
-        var content = JsonConvert.SerializeObject(new Response(200, DateTime.Now, Message), Formatting.Indented);
+        var content = JsonConvert.SerializeObject(new Response(200, DateTime.UtcNow, Message), Formatting.Indented);
 
         return content;
     }
