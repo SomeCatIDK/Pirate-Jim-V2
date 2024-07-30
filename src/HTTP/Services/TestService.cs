@@ -14,7 +14,7 @@ public class TestService
     [ResourceMethod]
     public IResponse GetTest(IRequest request)
     {
-        var response = new Response(200, DateTime.UtcNow, Message);
+        var response = new ResponseRecord(200, DateTime.UtcNow, Message);
 
         return request.Respond()
             .Content(new JsonContent(response, JsonSerializerOptions.Default))
