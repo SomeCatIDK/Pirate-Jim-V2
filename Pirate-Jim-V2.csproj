@@ -11,12 +11,26 @@
 
     <ItemGroup>
       <PackageReference Include="Discord.Net" Version="3.15.2" />
-      <PackageReference Include="Discord.Net.WebSocket" Version="3.15.2" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.13">
+      <PackageReference Include="Discord.Net.WebSocket" Version="3.15.3" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.7">
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         <PrivateAssets>all</PrivateAssets>
       </PackageReference>
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.13" />
+		<PackageReference Include="GenHTTP.Core" Version="8.0.0" />
+		<PackageReference Include="GenHTTP.Modules.Webservices" Version="8.0.0" />
+		<PackageReference Include="GenHTTP.Modules.Security" Version="8.0.0" />
+		<PackageReference Include="GenHTTP.Modules.Layouting" Version="8.0.0" />
+		<PackageReference Include="GenHTTP.Modules.Practices" Version="8.0.0" />
+		<PackageReference Include="GenHTTP.Modules.ClientCaching" Version="8.0.0" />
+		<PackageReference Include="GenHTTP.Modules.Reflection" Version="8.0.0" />
+		<PackageReference Include="GenHTTP.Modules.ErrorHandling" Version="8.0.0" />
+		<PackageReference Include="GenHTTP.Modules.Pages" Version="8.0.0" />
+		<PackageReference Include="GenHTTP.Modules.IO" Version="8.0.0" />
+		<PackageReference Include="GenHTTP.Api" Version="8.0.0" />
+		<PackageReference Include="GenHTTP.Modules.Basics" Version="8.0.1" />
+		<PackageReference Include="GenHTTP.Modules.Placeholders" Version="8.0.0" />
+		<PackageReference Include="GenHTTP.Modules.Authentication" Version="8.0.0" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.7" />
     </ItemGroup>
 
     <ItemGroup>
