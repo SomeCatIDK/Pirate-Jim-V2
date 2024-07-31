@@ -5,7 +5,7 @@ using GenHTTP.Api.Protocol;
 using GenHTTP.Modules.Conversion.Providers.Json;
 using SomeCatIDK.PirateJim.HTTP.Model;
 
-namespace SomeCatIDK.PirateJim.HTTP;
+namespace SomeCatIDK.PirateJim.HTTP.Extensions;
 
 public static class ResponseBuilder
 {

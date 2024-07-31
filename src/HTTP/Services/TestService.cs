@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using GenHTTP.Api.Protocol;
 using GenHTTP.Modules.Webservices;
+using SomeCatIDK.PirateJim.HTTP.Extensions;
 using SomeCatIDK.PirateJim.HTTP.Model;
 
 namespace SomeCatIDK.PirateJim.HTTP.Services;

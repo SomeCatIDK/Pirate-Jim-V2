@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using GenHTTP.Api.Content;
 using GenHTTP.Api.Protocol;
+using SomeCatIDK.PirateJim.HTTP.Extensions;
 using SomeCatIDK.PirateJim.HTTP.Model;
 
 namespace SomeCatIDK.PirateJim.HTTP;
