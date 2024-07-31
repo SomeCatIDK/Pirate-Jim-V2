@@ -12,6 +12,6 @@ public class TestService
     [ResourceMethod]
     public async ValueTask<IResponse?> GetTest(IRequest request)
     {
-        return await request.Respond().GetJsonResponse(ResponseStatus.OK, new MessageRecord(Message));
+        return await request.Respond().BuildJsonResponse(ResponseStatus.OK, new MessageRecord(Message));
     }
 }

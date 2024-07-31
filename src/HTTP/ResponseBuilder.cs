@@ -9,7 +9,7 @@ namespace SomeCatIDK.PirateJim.HTTP;
 
 public static class ResponseBuilder
 {
-    public static ValueTask<IResponse?> GetJsonResponse(this IResponseBuilder builder, ResponseStatus status, object content)
+    public static ValueTask<IResponse?> BuildJsonResponse(this IResponseBuilder builder, ResponseStatus status, object content)
     {
         var response = new ResponseRecord((int)status, DateTime.UtcNow, builder.Request.Host + builder.Request.Target.Path, content);
         

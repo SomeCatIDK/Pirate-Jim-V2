@@ -8,20 +8,17 @@ namespace SomeCatIDK.PirateJim.HTTP;
 
 public class JsonErrorMapper : IErrorMapper<Exception>
 {
-    public ValueTask<IResponse?> Map(IRequest request, IHandler handler, Exception error)
+    public async ValueTask<IResponse?> Map(IRequest request, IHandler handler, Exception error)
     {
         Console.WriteLine(error.Message + error.StackTrace);
-        var response = request.Respond()
-            .GetJsonResponse(ResponseStatus.InternalServerError, new ErrorRecord(error.Message, error.StackTrace ?? string.Empty));
-
-        return response;
+        
+        return await request.Respond()
+            .BuildJsonResponse(ResponseStatus.InternalServerError, new ErrorRecord(error.Message, error.StackTrace ?? string.Empty));
     }
 
-    public ValueTask<IResponse?> GetNotFound(IRequest request, IHandler handler)
+    public async ValueTask<IResponse?> GetNotFound(IRequest request, IHandler handler)
     {
-        var response = request.Respond()
-            .GetJsonResponse(ResponseStatus.NotFound, new MessageRecord("The requested endpoint does not exist."));
-
-        return response;
+        return await request.Respond()
+            .BuildJsonResponse(ResponseStatus.NotFound, new MessageRecord("The requested endpoint does not exist."));
     }
 }
