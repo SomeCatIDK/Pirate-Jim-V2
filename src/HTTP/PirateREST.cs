@@ -14,6 +14,7 @@ public class PirateREST
     {
         var testService = Layout.Create()
             .AddService<TestService>("test")
+            .AddService<ErrorService>("error")
             .Add(ErrorHandler.From(new JsonErrorMapper()))
             .Add(CorsPolicy.Permissive());
 
@@ -28,5 +29,3 @@ public class PirateREST
             .Run();
     }
 }
-
-

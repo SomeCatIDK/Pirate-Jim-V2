@@ -15,7 +15,7 @@ public class TestService
     public IResponse GetTest(IRequest request)
     {
         var response = new ResponseRecord(200, DateTime.UtcNow, new MessageRecord(Message));
-
+        
         return request.Respond()
             .Content(new JsonContent(response, JsonSerializerOptions.Default))
             .Type(FlexibleContentType.Get(ContentType.ApplicationJson))
