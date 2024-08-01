@@ -15,7 +15,7 @@ public static class ResponseBuilder
         
         return new ValueTask<IResponse?>(builder
             .Status(status)
-            .Content(new JsonContent(response, new JsonSerializerOptions()))
+            .Content(new JsonContent(response, new JsonSerializerOptions{ WriteIndented = true }))
             .Type(FlexibleContentType.Get(ContentType.ApplicationJson))
             .Build());
     }

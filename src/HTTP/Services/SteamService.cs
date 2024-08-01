@@ -8,7 +8,7 @@ using SomeCatIDK.PirateJim.HTTP.Extensions;
 using SomeCatIDK.PirateJim.HTTP.Model;
 
 namespace SomeCatIDK.PirateJim.HTTP.Services;
-
+/*
 public class SteamService
 {
     [ResourceMethod]
@@ -51,3 +51,4 @@ public class SteamService
         return await request.Respond().BuildJsonResponse(ResponseStatus.BadRequest, new MessageRecord("The query parameter \'SteamID\' must be set to a valid SteamID."));
     }
 }
+*/
