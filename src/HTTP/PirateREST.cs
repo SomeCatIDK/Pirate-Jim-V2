@@ -15,6 +15,7 @@ public class PirateREST
         var testService = Layout.Create()
             .AddService<TestService>("test")
             .AddService<ErrorService>("error")
+            .AddService<SteamService>("steam")
             .Add(ErrorHandler.From(new JsonErrorMapper()))
             .Add(CorsPolicy.Permissive());
 
