@@ -118,7 +118,9 @@ public class RemoveInvalidGuideTagService : IService, IInitializableService
             return;
         }
 
-        if (guildUser.GuildPermissions.ManageThreads)
+        var owner = (SocketGuildUser) post.Owner;
+        
+        if (owner.GuildPermissions.ManageThreads)
             return;
 
         var newTags = post.AppliedTags.ToList();
