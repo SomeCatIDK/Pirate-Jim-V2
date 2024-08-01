@@ -34,7 +34,7 @@ public class SteamService
         if (response.StatusCode == HttpStatusCode.NotFound)
             return await BuildInvalidSteamIdResponse(request);
 
-        if ((int) response.StatusCode >= 500)
+        if ((int) response.StatusCode != 200)
             throw new Exception($"Steam's servers returned \'{response.StatusCode}\'!");
         
         var steamResponse = await response.Content.ReadAsStringAsync();
