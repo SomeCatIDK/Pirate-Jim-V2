@@ -80,8 +80,10 @@ public sealed class PirateJim
         // This syntax is hellish, but it's only one line.
         if (author.Roles.Select(x => x.Id).Any(roles.Contains))
             return;
-        
-        if (!message.Content.ToLowerInvariant().Contains("discord.gg/"))
+
+        var content = message.Content.ToLowerInvariant();
+
+        if (content.Contains("discord.gg/") || content.Contains("discord.com/invite/"))
             return;
         
         await message.DeleteAsync();
