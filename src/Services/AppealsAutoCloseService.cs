@@ -5,19 +5,21 @@ using SomeCatIDK.PirateJim.Model;
 
 namespace SomeCatIDK.PirateJim.Services;
 
-public class AppealsAutoCloseService : IService
+public class AppealsAutoCloseService : IService, IInitializableService
 {
     // ReSharper disable once MemberCanBePrivate.Global
     public const string LockedMessage = "**This post is now locked.**\n\nWe automatically lock every appeal after five days.";
 
+    private readonly PirateJim _bot;
+
     public AppealsAutoCloseService(PirateJim bot)
     {
-        
+        _bot = bot;
     }
 
-    public async Task InitializeAsync(PirateJim bot)
+    public async Task InitializeAsync()
     {
-        var channel = await bot.DiscordClient.GetChannelAsync(UOChannels.Appeals);
+        var channel = await _bot.DiscordClient.GetChannelAsync(UOChannels.Appeals);
 
         if (channel is not IForumChannel forum)
             return;

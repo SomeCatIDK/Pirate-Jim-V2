@@ -34,8 +34,7 @@ public sealed class PirateJim
         _services.Add(new CommandInteractionService(this));
         _services.Add(new UserTimeoutService(this));
         _services.Add(new AttachmentChannelService(this));
-        var appealsService = new AppealsAutoCloseService(this);
-        _services.Add(appealsService);
+        _services.Add(new AppealsAutoCloseService(this));
         _services.Add(new RatingChannelService(this));
         _services.Add(new SurvivorRoleService(this));
         
@@ -43,18 +42,19 @@ public sealed class PirateJim
 
         DiscordClient.MessageReceived += InviteChecker;
         
-        var guideTagService = new RemoveInvalidGuideTagService(this);
-        _services.Add(guideTagService);
+        _services.Add(new RemoveInvalidGuideTagService(this));
         
         await DiscordClient.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("PJ_TOKEN"));
         
         await DiscordClient.StartAsync();
 
         await DiscordClient.SetGameAsync("V2 time!");
-        
-        await appealsService.InitializeAsync(this);
 
-        //await guideTagService.InitializeAsync();
+        foreach (var service in _services)
+        {
+            if (service is IInitializableService initializableService)
+                await initializableService.InitializeAsync();
+        }
 
         // Keep current Task alive to prevent program from closing.
         await Task.Delay(-1);
