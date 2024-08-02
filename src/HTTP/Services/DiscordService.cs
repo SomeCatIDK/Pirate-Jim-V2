@@ -14,21 +14,49 @@ namespace SomeCatIDK.PirateJim.HTTP.Services;
 
 public class DiscordService
 {
-    private ulong _clientId = 0;
-    private string _clientSecret = string.Empty;
+    private readonly ulong _clientId;
+    private readonly string _clientSecret;
+
+    public DiscordService()
+    {
+        var clientIdString = Environment.GetEnvironmentVariable("PJ_CLIENTID");
+        var clientSecret = Environment.GetEnvironmentVariable("PJ_CLIENTSECRET");
+
+        if (clientIdString == null || clientSecret == null)
+        {
+            Console.WriteLine("PJ_CLIENTID and PJ_CLIENTSECRET must be set.");
+            Environment.Exit(-1);
+        }
+
+        _clientSecret = clientSecret;
+
+        if (!ulong.TryParse(clientIdString, out var clientId))
+        {
+            Console.WriteLine("PJ_CLIENTID must be set to a valid integer.");
+            Environment.Exit(-1);
+        }
+
+        _clientId = clientId;
+    }
     
-    [ResourceMethod(RequestMethod.GET)]
+    [ResourceMethod]
     public async ValueTask<IResponse?> GetDiscord(IRequest request)
     {
-        if (_clientId == 0)
-            _clientId = ulong.Parse(Environment.GetEnvironmentVariable("PJ_CLIENTID")!);
-
-        if (_clientSecret == string.Empty)
-            _clientSecret = Environment.GetEnvironmentVariable("PJ_CLIENTSECRET") ?? throw new Exception("Client secret not implemented!");
-        
         if (!request.Query.TryGetValue("code", out var code))
             return await request.Respond().BuildJsonResponse(ResponseStatus.BadRequest, new MessageRecord("User token code is invalid."));
 
+        var token = await ExchangeUserToken(code);
+        
+        using var client = new HttpClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        var userId = await GetUserId(client);
+
+        return await request.Respond().BuildJsonResponse(ResponseStatus.OK, new MessageRecord(userId.ToString()));
+    }
+
+    private async ValueTask<string> ExchangeUserToken(string code)
+    {
         using var client = new HttpClient();
 
         var base64Auth = Convert.ToBase64String(new UTF8Encoding().GetBytes($"{_clientId}:{_clientSecret}"));
@@ -47,35 +75,45 @@ public class DiscordService
         {
             Method = HttpMethod.Post,
             Content = tokenAuthBody,
-            RequestUri = new Uri("https://discord.com/api/oauth2/token")
+            RequestUri = new Uri("https://discord.com/api/oauth2/token"),
         };
 
         var result = await client.SendAsync(tokenAuthRequest);
 
         if (!result.IsSuccessStatusCode)
+        {
+            Console.WriteLine(await result.Content.ReadAsStringAsync());
             throw new Exception($"Discord's API sent status code {result.StatusCode.ToString()}");
-        
+        }
+
         var resultContent = await result.Content.ReadAsStringAsync();
 
-        var token = JObject.Parse(resultContent)["access_token"]!.ToString();
-        
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        return JObject.Parse(resultContent)["access_token"]!.ToString();
+    }
 
-        var connectionsRequest = new HttpRequestMessage()
+    private async ValueTask<ulong> GetUserId(HttpClient authenticatedClient)
+    {
+        var userRequest = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri("https://discord.com/api/v10/users/@me/connections")
+            RequestUri = new Uri("https://discord.com/api/v10/users/@me")
         };
 
-        var connectionsResponse = await client.SendAsync(connectionsRequest);
+        var userResult = await authenticatedClient.SendAsync(userRequest);
 
-        var jsonResponse = JObject.Parse(await connectionsResponse.Content.ReadAsStringAsync());
+        if (!userResult.IsSuccessStatusCode)
+            throw new Exception($"Discord API returned status code: {userResult.StatusCode}");
 
-        foreach (var obj in jsonResponse)
-        {
-            
-        }
+        var userIdObject = JObject.Parse(await userResult.Content.ReadAsStringAsync())["id"];
         
-        return await request.Respond().BuildJsonResponse(ResponseStatus.OK, await connectionsResponse.Content.ReadAsStringAsync());
+        if (userIdObject == null)
+            throw new Exception("Discord's API returned invalid data.");
+        
+        var userIdString = userIdObject.ToString();
+
+        if (!ulong.TryParse(userIdString, out var userId))
+            throw new Exception("Discord's API returned invalid data.");
+        
+        return userId;
     }
 }
