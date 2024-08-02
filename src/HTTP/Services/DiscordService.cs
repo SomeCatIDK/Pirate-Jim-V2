@@ -45,24 +45,28 @@ public class DiscordService
         if (!request.Query.TryGetValue("code", out var code))
             return await request.Respond().BuildJsonResponse(ResponseStatus.BadRequest, new MessageRecord("User token code is invalid."));
 
-        var token = await ExchangeUserToken(code);
-        
-        using var client = new HttpClient();
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
-        var userId = await GetUserId(client);
-
-        return await request.Respond().BuildJsonResponse(ResponseStatus.OK, new MessageRecord(userId.ToString()));
-    }
-
-    private async ValueTask<string> ExchangeUserToken(string code)
-    {
-        using var client = new HttpClient();
+        using var botAuthenticatedClient = new HttpClient();
 
         var base64Auth = Convert.ToBase64String(new UTF8Encoding().GetBytes($"{_clientId}:{_clientSecret}"));
         
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", base64Auth);
+        botAuthenticatedClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", base64Auth);
         
+        var token = await ExchangeUserToken(botAuthenticatedClient, code);
+        
+        using var userAuthenticatedClient = new HttpClient();
+        userAuthenticatedClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        var userId = await GetUserId(userAuthenticatedClient);
+
+        // TODO: Put the rest of the code here
+
+        await RevokeUserToken(botAuthenticatedClient, token);
+        
+        return await request.Respond().BuildJsonResponse(ResponseStatus.OK, new MessageRecord(userId.ToString()));
+    }
+
+    private async ValueTask<string> ExchangeUserToken(HttpClient client, string code)
+    {
         KeyValuePair<string, string>[] tokenBodyPairs = [
             new KeyValuePair<string, string>("code", code),
             new KeyValuePair<string, string>("grant_type", "authorization_code"),
@@ -91,6 +95,34 @@ public class DiscordService
         return JObject.Parse(resultContent)["access_token"]!.ToString();
     }
 
+    private async Task RevokeUserToken(HttpClient client, string token)
+    {
+        KeyValuePair<string, string>[] tokenBodyPairs =
+        [
+            new KeyValuePair<string, string>("token", token),
+            new KeyValuePair<string, string>("token_type_hint", "access_token")
+        ];
+        
+        var tokenAuthBody = new FormUrlEncodedContent(tokenBodyPairs);
+        
+        var revokeRequest = new HttpRequestMessage
+        {
+            Method = HttpMethod.Post,
+            Content = tokenAuthBody,
+            RequestUri = new Uri("https://discord.com/api/oauth2/token/revoke")
+        };
+
+        var response = await client.SendAsync(revokeRequest);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            Console.WriteLine(await response.Content.ReadAsStringAsync());
+            throw new Exception($"Discord's API sent status code {response.StatusCode.ToString()}");
+        }
+
+        await Task.CompletedTask;
+    }
+    
     private async ValueTask<ulong> GetUserId(HttpClient authenticatedClient)
     {
         var userRequest = new HttpRequestMessage
