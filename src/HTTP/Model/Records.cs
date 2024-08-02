@@ -7,6 +7,4 @@ public record MessageRecord(string Message);
 
 public record ResponseRecord(int Status, DateTime Time, string Url, object Content);
 
-public record SteamItemsRecord(ulong SteamID, bool Gold, bool EarlyAccess);
-
-public record DiscordAuthorizationRecord(ulong DiscordID, string Code, string Token);
+//public record SteamItemsRecord(ulong SteamID, bool Gold, bool EarlyAccess);

@@ -13,9 +13,10 @@ public class PirateREST
     public static void Initialize()
     {
         var testService = Layout.Create()
+            #if DEBUG
             .AddService<TestService>("test")
             .AddService<ErrorService>("error")
-            //.AddService<SteamService>("steam")
+            #endif
             .AddService<DiscordService>("oauth2")
             .Add(ErrorHandler.From(new JsonErrorMapper()))
             .Add(CorsPolicy.Permissive());
