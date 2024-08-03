@@ -45,10 +45,12 @@ public class DiscordService
     public async ValueTask<IResponse?> GetDiscord(IRequest request)
     {
         // Request body requires '?code=' at the end as this is how Discord passes the codes.
+        // 'code' is used by OAuth2 to fetch a user token.
         if (!request.Query.TryGetValue("code", out var code))
             return await request.Respond().BuildJsonResponse(ResponseStatus.BadRequest, new MessageRecord("User token code is invalid."));
 
         // This HttpClient is used to interact with the token itself.
+        // This client is authenticated using the bot's information.
         using var botAuthenticatedClient = new HttpClient();
         var base64Auth = Convert.ToBase64String(new UTF8Encoding().GetBytes($"{_clientId}:{_clientSecret}"));
         botAuthenticatedClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", base64Auth);
@@ -63,12 +65,15 @@ public class DiscordService
         // Fetch the user's Discord ID using their token.
         var userId = await GetUserId(userAuthenticatedClient);
 
+        var connections = await GetUserConnections(userAuthenticatedClient);
+        
         // TODO: Put the rest of the code here
 
         // Revokes the token so that it may not be used again. (security feature)
+        // If the user uses this API again, the user must reauthorize through OAuth2 to issue a new token.
         await RevokeUserToken(botAuthenticatedClient, token);
         
-        return await request.Respond().BuildJsonResponse(ResponseStatus.OK, new MessageRecord(userId.ToString()));
+        return await request.Respond().BuildJsonResponse(ResponseStatus.OK, connections);
     }
 
     private async ValueTask<string> ExchangeUserToken(HttpClient client, string code)
@@ -137,16 +142,16 @@ public class DiscordService
         await Task.CompletedTask;
     }
     
-    private async ValueTask<ulong> GetUserId(HttpClient authenticatedClient)
+    private async ValueTask<ulong> GetUserId(HttpClient client)
     {
         var userRequest = new HttpRequestMessage
         {
-            Method = HttpMethod.Get, // Any Discord API endpoints we use will use GET
-            RequestUri = new Uri("https://discord.com/api/v10/users/@me")
+            Method = HttpMethod.Get, // Any non-OAuth2 Discord API endpoints we use will use GET
+            RequestUri = new Uri("https://discord.com/api/v10/users/@me") // '@me' will work as it returns the user identified by the submitted token. 
         };
 
         // Send request
-        var userResult = await authenticatedClient.SendAsync(userRequest);
+        var userResult = await client.SendAsync(userRequest);
 
         // Check status code
         if (!userResult.IsSuccessStatusCode)
@@ -166,5 +171,47 @@ public class DiscordService
             throw new Exception("Discord's API returned invalid data.");
         
         return userId;
+    }
+
+    private async ValueTask<DiscordUserConnections> GetUserConnections(HttpClient client)
+    {
+        var connectionsRequest = new HttpRequestMessage
+        {
+            Method = HttpMethod.Get, // Any non-OAuth2 Discord API endpoints we use will use GET
+            RequestUri = new Uri("https://discord.com/api/v10/users/@me/connections") // '@me' will work as it returns the user identified by the submitted token. 
+        };
+
+        var result = await client.SendAsync(connectionsRequest);
+        
+        if (!result.IsSuccessStatusCode)
+            throw new Exception($"Discord API returned status code: {result.StatusCode}");
+
+        var jsonArray = JArray.Parse(await result.Content.ReadAsStringAsync());
+
+        var connections = new List<ConnectedAccount>();
+        
+        foreach (var item in jsonArray)
+        {
+            var type = item["type"]!.Value<string>();
+            var id = item["id"]!.Value<string>();
+            var verified = item["verified"]!.Value<bool>();
+            
+            switch (type)
+            {
+                case "steam":
+                    connections.Add(new ConnectedAccount(AccountType.Steam, id!, verified));
+                    break;
+                case "youtube":
+                    connections.Add(new ConnectedAccount(AccountType.YouTube, id!, verified));
+                    break;
+                case "twitch":
+                    connections.Add(new ConnectedAccount(AccountType.Twitch, id!, verified));
+                    break;
+                default:
+                    continue;
+            }
+        }
+        
+        return new DiscordUserConnections(connections.ToArray());
     }
 }

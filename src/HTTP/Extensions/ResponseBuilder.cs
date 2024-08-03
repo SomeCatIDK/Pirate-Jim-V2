@@ -12,12 +12,12 @@ public static class ResponseBuilder
     public static ValueTask<IResponse?> BuildJsonResponse(this IResponseBuilder builder, ResponseStatus status, object content)
     {
         // Creates a C# object representing the content of the message.
-        var response = new ResponseRecord((int)status, DateTime.UtcNow, builder.Request.Host + builder.Request.Target.Path, content);
+        var response = new ResponseRecord($"{(int)status} - {status.ToString()}", DateTime.UtcNow, builder.Request.Host + builder.Request.Target.Path, content);
         
         // Build a pretty-printed JSON response with application/json header
         return new ValueTask<IResponse?>(builder
             .Status(status)
-            .Content(new JsonContent(response, new JsonSerializerOptions{ WriteIndented = true }))
+            .Content(new JsonContent(response, new JsonSerializerOptions { WriteIndented = true }))
             .Type(FlexibleContentType.Get(ContentType.ApplicationJson))
             .Build());
     }
