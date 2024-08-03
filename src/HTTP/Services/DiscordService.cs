@@ -11,6 +11,7 @@ using Newtonsoft.Json.Linq;
 using SomeCatIDK.PirateJim.HTTP.Extensions;
 using SomeCatIDK.PirateJim.HTTP.Helpers;
 using SomeCatIDK.PirateJim.HTTP.Model;
+using SomeCatIDK.PirateJim.Model;
 
 namespace SomeCatIDK.PirateJim.HTTP.Services;
 
@@ -83,6 +84,31 @@ public class DiscordService
         // Revokes the token so that it may not be used again. (security feature)
         // If the user uses this API again, the user must reauthorize through OAuth2 to issue a new token.
         await RevokeUserToken(botAuthenticatedClient, token);
+
+        var guild = PirateREST.DiscordApp.DiscordClient.Guilds.First();
+        
+        var user = guild.GetUser(userId);
+        
+        foreach (var steamAccount in records.Where(steamAccount => steamAccount is {InventoryPrivate: false, Verified: true}))
+        {
+            if (steamAccount.Items.Contains(ESteamItem.CrimsonBeret))
+                await user.AddRoleAsync(UORoles.CrimsonBeret);
+            
+            if (steamAccount.Items.Contains(ESteamItem.DebuggersBeret))
+                await user.AddRoleAsync(UORoles.Debugger);
+            
+            if (steamAccount.Items.Contains(ESteamItem.ExperiencedBeret))
+                await user.AddRoleAsync(UORoles.Experienced);
+            
+            if (steamAccount.Items.Contains(ESteamItem.GoldBowtie))
+                await user.AddRoleAsync(UORoles.Gold);
+            
+            if (steamAccount.Items.Contains(ESteamItem.WhiteHat))
+                await user.AddRoleAsync(UORoles.WhiteHatter);
+            
+            if (steamAccount.Items.Contains(ESteamItem.EarlyAccessBeret))
+                await user.AddRoleAsync(UORoles.EarlyAccess);
+        }
         
         return await request.Respond().BuildJsonResponse(ResponseStatus.OK, records);
     }

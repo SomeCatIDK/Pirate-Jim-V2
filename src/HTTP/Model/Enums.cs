@@ -13,4 +13,6 @@ public enum ESteamItem : ulong
     EarlyAccessBeret = 3012196783887754244,
     ExperiencedBeret = 1891955010606076636,
     DebuggersBeret = 2027114820609606858,
+    CrimsonBeret = 2023740926829183725,
+    WhiteHat = 3338844655474021791
 }
