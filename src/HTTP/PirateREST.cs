@@ -8,10 +8,14 @@ using SomeCatIDK.PirateJim.HTTP.Services;
 
 namespace SomeCatIDK.PirateJim.HTTP;
 
-public class PirateREST
+public static class PirateREST
 {
-    public static void Initialize()
+    public static PirateJim DiscordApp { get; private set; }
+    
+    public static void Initialize(PirateJim discordApp)
     {
+        DiscordApp = discordApp;
+        
         var testService = Layout.Create()
             #if DEBUG
             .AddService<TestService>("test")

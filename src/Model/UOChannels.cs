@@ -5,6 +5,15 @@
 
 public static class UOChannels
 {
+    public const ulong Appeals = 1269402629663096975;
+    public const ulong Modding = 1269402070180433940;
+    public const ulong Advertising = 1269402092766892042;
+    public const ulong Trading = 1269402141559357570;
+    public const ulong ServerHosting = 1269402460716269588;
+    public const ulong UnturnedSupport = 1269402502806372534;
+    public const ulong ModdingSupport = 1269402539124723742;
+    
+#if RELEASE
     /// <summary>
     /// This is a text channel.
     /// </summary>
@@ -149,5 +158,8 @@ public static class UOChannels
     /// This is a voice channel.
     /// </summary>
     public const ulong Streaming256KbsVC = 695026802221121537;
+    #else
+    
+    #endif
 }
 

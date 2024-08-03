@@ -6,6 +6,27 @@
 
 public static class UORoles
 {
+    #if DEBUG
+    
+    public const ulong ArtContestWinner = 1269403242916347956;
+    public const ulong ContentCreator = 1269403285991718942;
+    public const ulong Contributor = 1269403317453328586;
+    public const ulong YouTube = 1269403345240723528;
+    public const ulong Twitch = 1269403383324999792;
+    public const ulong Workshop = 1269403408561999893;
+    public const ulong DiscordContestWinner = 1269403439830663271;
+    public const ulong SpecialThanks = 1269403482209914990;
+    public const ulong CrimsonBeret = 1269403516200288328;
+    public const ulong Gold = 1269403549251403957;
+    public const ulong EarlyAccess = 1269403573653995616;
+    public const ulong WhiteHatter = 1269403596731191419;
+    public const ulong Debugger = 1269403623838846986;
+    public const ulong ModerationTeam = 1269403644198125638;
+    public const ulong ThreadsBanned = 1269403684195008563;
+    public const ulong Survivor = 1269403736090869920;
+    
+    #else
+    
     public const ulong SDG = 324232061093412867;
     public const ulong ModerationTeam = 326108032067174411;
     public const ulong Administrator = 324230861245513729;
@@ -38,10 +59,11 @@ public static class UORoles
     public const ulong Gold = 324231297096613888;
     public const ulong EarlyAccess = 333173979801976834;
     public const ulong Survivor = 554431731344736258;
-
-
+    
+    #endif
+    
     public static readonly ulong[] GrantableRoles =
-    {
+    [
         ArtContestWinner,
         ContentCreator,
         Contributor, 
@@ -55,5 +77,5 @@ public static class UORoles
         EarlyAccess, 
         WhiteHatter, 
         Debugger
-    };
+    ];
 }

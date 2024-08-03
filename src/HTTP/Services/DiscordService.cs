@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -8,6 +9,7 @@ using GenHTTP.Api.Protocol;
 using GenHTTP.Modules.Webservices;
 using Newtonsoft.Json.Linq;
 using SomeCatIDK.PirateJim.HTTP.Extensions;
+using SomeCatIDK.PirateJim.HTTP.Helpers;
 using SomeCatIDK.PirateJim.HTTP.Model;
 
 namespace SomeCatIDK.PirateJim.HTTP.Services;
@@ -20,13 +22,13 @@ public class DiscordService
     public DiscordService()
     {
         // Retrieve Discord's assigned ids to our bot.
-        var clientIdString = Environment.GetEnvironmentVariable("PJ_CLIENTID");
-        var clientSecret = Environment.GetEnvironmentVariable("PJ_CLIENTSECRET");
+        var clientIdString = Environment.GetEnvironmentVariable("PJ_ID");
+        var clientSecret = Environment.GetEnvironmentVariable("PJ_SECRET");
 
         // Enforces correct variables.
         if (clientIdString == null || clientSecret == null)
         {
-            Console.WriteLine("PJ_CLIENTID and PJ_CLIENTSECRET must be set.");
+            Console.WriteLine("PJ_ID and PJ_SECRET must be set.");
             Environment.Exit(-1);
         }
 
@@ -34,7 +36,7 @@ public class DiscordService
 
         if (!ulong.TryParse(clientIdString, out var clientId))
         {
-            Console.WriteLine("PJ_CLIENTID must be set to a valid integer.");
+            Console.WriteLine("PJ_ID must be set to a valid integer.");
             Environment.Exit(-1);
         }
 
@@ -66,6 +68,15 @@ public class DiscordService
         var userId = await GetUserId(userAuthenticatedClient);
 
         var connections = await GetUserConnections(userAuthenticatedClient);
+
+        var records = new List<SteamItemsRecord>();
+        
+        foreach (var steamConnection in connections.Accounts.Where(x => x.EAccountType == EAccountType.Steam))
+        {
+            var items = await SteamHelper.GetSteamItems(ulong.Parse(steamConnection.Id), steamConnection.Verified);
+            
+            records.Add(items);
+        }
         
         // TODO: Put the rest of the code here
 
@@ -73,10 +84,10 @@ public class DiscordService
         // If the user uses this API again, the user must reauthorize through OAuth2 to issue a new token.
         await RevokeUserToken(botAuthenticatedClient, token);
         
-        return await request.Respond().BuildJsonResponse(ResponseStatus.OK, connections);
+        return await request.Respond().BuildJsonResponse(ResponseStatus.OK, records);
     }
 
-    private async ValueTask<string> ExchangeUserToken(HttpClient client, string code)
+    private static async ValueTask<string> ExchangeUserToken(HttpClient client, string code)
     {
         // This is the body of the POST request.
         KeyValuePair<string, string>[] tokenBodyPairs = [
@@ -97,12 +108,7 @@ public class DiscordService
 
         var result = await client.SendAsync(tokenAuthRequest);
 
-        // Check status code
-        if (!result.IsSuccessStatusCode)
-        {
-            Console.WriteLine(await result.Content.ReadAsStringAsync());
-            throw new Exception($"Discord's API sent status code {result.StatusCode.ToString()}");
-        }
+        result.EnsureSuccessStatusCode();
 
         // Read response body
         var resultContent = await result.Content.ReadAsStringAsync();
@@ -111,7 +117,7 @@ public class DiscordService
         return JObject.Parse(resultContent)["access_token"]!.ToString();
     }
 
-    private async Task RevokeUserToken(HttpClient client, string token)
+    private static async Task RevokeUserToken(HttpClient client, string token)
     {
         // This is the body of the POST request.
         KeyValuePair<string, string>[] tokenBodyPairs =
@@ -132,17 +138,10 @@ public class DiscordService
 
         var response = await client.SendAsync(revokeRequest);
 
-        // Check status code
-        if (!response.IsSuccessStatusCode)
-        {
-            Console.WriteLine(await response.Content.ReadAsStringAsync());
-            throw new Exception($"Discord's API sent status code {response.StatusCode.ToString()}");
-        }
-
-        await Task.CompletedTask;
+        response.EnsureSuccessStatusCode();
     }
-    
-    private async ValueTask<ulong> GetUserId(HttpClient client)
+
+    private static async ValueTask<ulong> GetUserId(HttpClient client)
     {
         var userRequest = new HttpRequestMessage
         {
@@ -173,7 +172,7 @@ public class DiscordService
         return userId;
     }
 
-    private async ValueTask<DiscordUserConnections> GetUserConnections(HttpClient client)
+    private static async ValueTask<DiscordUserConnections> GetUserConnections(HttpClient client)
     {
         var connectionsRequest = new HttpRequestMessage
         {
@@ -183,8 +182,7 @@ public class DiscordService
 
         var result = await client.SendAsync(connectionsRequest);
         
-        if (!result.IsSuccessStatusCode)
-            throw new Exception($"Discord API returned status code: {result.StatusCode}");
+        result.EnsureSuccessStatusCode();
 
         var jsonArray = JArray.Parse(await result.Content.ReadAsStringAsync());
 
@@ -199,13 +197,13 @@ public class DiscordService
             switch (type)
             {
                 case "steam":
-                    connections.Add(new ConnectedAccount(AccountType.Steam, id!, verified));
+                    connections.Add(new ConnectedAccount(EAccountType.Steam, id!, verified));
                     break;
                 case "youtube":
-                    connections.Add(new ConnectedAccount(AccountType.YouTube, id!, verified));
+                    connections.Add(new ConnectedAccount(EAccountType.YouTube, id!, verified));
                     break;
                 case "twitch":
-                    connections.Add(new ConnectedAccount(AccountType.Twitch, id!, verified));
+                    connections.Add(new ConnectedAccount(EAccountType.Twitch, id!, verified));
                     break;
                 default:
                     continue;
