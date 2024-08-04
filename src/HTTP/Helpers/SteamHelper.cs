@@ -43,6 +43,12 @@ public static class SteamHelper
         
         if (data.Contains(((ulong) ESteamItem.ExperiencedBeret).ToString()))
             items.Add(ESteamItem.ExperiencedBeret);
+        
+        if (data.Contains(((ulong) ESteamItem.WhiteHat).ToString()))
+            items.Add(ESteamItem.WhiteHat);
+        
+        if (data.Contains(((ulong) ESteamItem.CrimsonBeret).ToString()))
+            items.Add(ESteamItem.CrimsonBeret);
 
         return new SteamItemsRecord(steamId, false, verified, items.ToArray());
     }
