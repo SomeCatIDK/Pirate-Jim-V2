@@ -83,7 +83,7 @@ public sealed class PirateJim
 
         var content = message.Content.ToLowerInvariant();
 
-        if (!content.Contains("discord.gg/") || content.Contains("discord.com/invite/"))
+        if (!content.Contains("discord.gg/") || !content.Contains("discord.com/invite/"))
             return;
         
         await message.DeleteAsync();
