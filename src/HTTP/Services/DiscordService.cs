@@ -210,17 +210,9 @@ public class DiscordService
         // Read JObject from the 'id' field
         var userIdObject = JObject.Parse(await userResult.Content.ReadAsStringAsync())["id"];
         
-        // Ensures 'id' exists
-        if (userIdObject == null)
-            throw new Exception("Discord's API returned invalid data.");
+        var userIdString = userIdObject!.ToString();
         
-        var userIdString = userIdObject.ToString();
-
-        // Ensures 'id' is a number
-        if (!ulong.TryParse(userIdString, out var userId))
-            throw new Exception("Discord's API returned invalid data.");
-        
-        return userId;
+        return ulong.Parse(userIdString);
     }
 
     private static async ValueTask<DiscordUserConnections> GetUserConnections(HttpClient client)
