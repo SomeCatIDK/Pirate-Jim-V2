@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -20,6 +21,9 @@ public class DiscordService
     private readonly ulong _clientId;
     private readonly string _clientSecret;
 
+    private const string BadData =
+        "Improper data was transmitted to Pirate Jim. Please use the link provided on Discord to try again. This may happen if the page is refreshed.";
+    
     public DiscordService()
     {
         // Retrieve Discord's assigned ids to our bot.
@@ -50,7 +54,7 @@ public class DiscordService
         // Request body requires '?code=' at the end as this is how Discord passes the codes.
         // 'code' is used by OAuth2 to fetch a user token.
         if (!request.Query.TryGetValue("code", out var code))
-            return await request.Respond().BuildJsonResponse(ResponseStatus.BadRequest, new MessageRecord("User token code is invalid."));
+            return await request.Respond().BuildJsonResponse(ResponseStatus.BadRequest, new MessageRecord(BadData));
 
         // This HttpClient is used to interact with the token itself.
         // This client is authenticated using the bot's information.
@@ -60,6 +64,9 @@ public class DiscordService
         
         // Exchanges code for a user token.
         var token = await ExchangeUserToken(botAuthenticatedClient, code);
+        
+        if (token == string.Empty)
+            return await request.Respond().BuildJsonResponse(ResponseStatus.BadRequest, new MessageRecord(BadData));
         
         // Create an HttpClient authenticated with the user token.
         using var userAuthenticatedClient = new HttpClient();
@@ -163,6 +170,9 @@ public class DiscordService
 
         var result = await client.SendAsync(tokenAuthRequest);
 
+        if (result.StatusCode == HttpStatusCode.BadRequest)
+            return string.Empty;
+        
         result.EnsureSuccessStatusCode();
 
         // Read response body
