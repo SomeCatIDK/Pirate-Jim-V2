@@ -32,22 +32,22 @@ public static class SteamHelper
 
         var items = new List<ESteamItem>();
         
-        if (data.Contains(((ulong) ESteamItem.GoldBowtie).ToString()))
+        if (data.Contains("Gold Bowtie"))
             items.Add(ESteamItem.GoldBowtie);
         
-        if (data.Contains(((ulong) ESteamItem.EarlyAccessBeret).ToString()))
+        if (data.Contains("Early Access Beret"))
             items.Add(ESteamItem.EarlyAccessBeret);
         
-        if (data.Contains(((ulong) ESteamItem.DebuggersBeret).ToString()))
+        if (data.Contains("Debugger's Beret"))
             items.Add(ESteamItem.DebuggersBeret);
         
-        if (data.Contains(((ulong) ESteamItem.ExperiencedBeret).ToString()))
+        if (data.Contains("Experienced Beret"))
             items.Add(ESteamItem.ExperiencedBeret);
         
-        if (data.Contains(((ulong) ESteamItem.WhiteHat).ToString()))
+        if (data.Contains("White Hat"))
             items.Add(ESteamItem.WhiteHat);
         
-        if (data.Contains(((ulong) ESteamItem.CrimsonBeret).ToString()))
+        if (data.Contains("Crimson Beret"))
             items.Add(ESteamItem.CrimsonBeret);
 
         return new SteamItemsRecord(steamId, false, verified, items.ToArray());
