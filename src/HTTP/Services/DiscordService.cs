@@ -94,43 +94,46 @@ public class DiscordService
         foreach (var steamAccount in records)
         {
             var roleNames = new List<string>();
-            
-            if (steamAccount.Items.Contains(ESteamItem.CrimsonBeret))
+
+            if (steamAccount.Verified)
             {
-                roleNames.Add("Crimson Beret");
-                await user.AddRoleAsync(UORoles.CrimsonBeret);
+                if (steamAccount.Items.Contains(ESteamItem.CrimsonBeret))
+                {
+                    roleNames.Add("Crimson Beret");
+                    await user.AddRoleAsync(UORoles.CrimsonBeret);
+                }
+
+                if (steamAccount.Items.Contains(ESteamItem.DebuggersBeret))
+                {
+                    roleNames.Add("Debugger");
+                    await user.AddRoleAsync(UORoles.Debugger);
+                }
+
+                if (steamAccount.Items.Contains(ESteamItem.ExperiencedBeret))
+                {
+                    roleNames.Add("Experienced");
+                    await user.AddRoleAsync(UORoles.Experienced);
+                }
+
+                if (steamAccount.Items.Contains(ESteamItem.GoldBowtie))
+                {
+                    roleNames.Add("Gold");
+                    await user.AddRoleAsync(UORoles.Gold);
+                }
+
+                if (steamAccount.Items.Contains(ESteamItem.WhiteHat))
+                {
+                    roleNames.Add("White Hatter");
+                    await user.AddRoleAsync(UORoles.WhiteHatter);
+                }
+
+                if (steamAccount.Items.Contains(ESteamItem.EarlyAccessBeret))
+                {
+                    roleNames.Add("Early Access");
+                    await user.AddRoleAsync(UORoles.EarlyAccess);
+                }
             }
 
-            if (steamAccount.Items.Contains(ESteamItem.DebuggersBeret))
-            {
-                roleNames.Add("Debugger");
-                await user.AddRoleAsync(UORoles.Debugger);
-            }
-
-            if (steamAccount.Items.Contains(ESteamItem.ExperiencedBeret))
-            {
-                roleNames.Add("Experienced");
-                await user.AddRoleAsync(UORoles.Experienced);
-            }
-
-            if (steamAccount.Items.Contains(ESteamItem.GoldBowtie))
-            {
-                roleNames.Add("Gold");
-                await user.AddRoleAsync(UORoles.Gold);
-            }
-
-            if (steamAccount.Items.Contains(ESteamItem.WhiteHat))
-            {
-                roleNames.Add("White Hatter");
-                await user.AddRoleAsync(UORoles.WhiteHatter);
-            }
-
-            if (steamAccount.Items.Contains(ESteamItem.EarlyAccessBeret))
-            {
-                roleNames.Add("Early Access");
-                await user.AddRoleAsync(UORoles.EarlyAccess);
-            }
-            
             steamAccountsPretty.Add(new FinalRolesRecord(steamAccount.SteamId, steamAccount.InventoryPrivate, steamAccount.Verified, roleNames.ToArray()));
         }
 
