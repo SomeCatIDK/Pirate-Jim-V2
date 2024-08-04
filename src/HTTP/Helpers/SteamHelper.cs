@@ -34,7 +34,7 @@ public static class SteamHelper
         
         string FormatString(string item)
         {
-            return $"\"name\": \"{item}\"";
+            return $"\"{item}\"";
         }
         
         if (data.Contains(FormatString("Gold Bowtie")))
