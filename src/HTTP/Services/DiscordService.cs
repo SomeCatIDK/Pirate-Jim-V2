@@ -133,6 +133,11 @@ public class DiscordService
             
             steamAccountsPretty.Add(new FinalRolesRecord(steamAccount.SteamId, steamAccount.InventoryPrivate, steamAccount.Verified, roleNames.ToArray()));
         }
+
+        if (steamAccountsPretty.Count == 0)
+        {
+            return await request.Respond().BuildJsonResponse(ResponseStatus.OK, new MessageRecord("No connected accounts were found. Please link your accounts for which you wish to receive roles."));
+        }
         
         return await request.Respond().BuildJsonResponse(ResponseStatus.OK, steamAccountsPretty);
     }
