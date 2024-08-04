@@ -1,4 +1,5 @@
 ﻿using System;
+using SomeCatIDK.PirateJim.Model;
 
 namespace SomeCatIDK.PirateJim.HTTP.Model;
 
@@ -6,6 +7,7 @@ namespace SomeCatIDK.PirateJim.HTTP.Model;
 public record ErrorRecord(string Message, string StackTrace);
 public record MessageRecord(string Message);
 public record ResponseRecord(string Status, DateTime Time, string Url, object Content);
+public record FinalRolesRecord(ulong SteamId, bool InventoryPrivate, bool ConnectionVerified, string[] Roles);
 
 // These are internal records relating to Discord.
 public record ConnectedAccount(EAccountType EAccountType, string Id, bool Verified);
