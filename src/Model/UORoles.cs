@@ -58,6 +58,7 @@ public static class UORoles
     public const ulong NitroBooster = 585535333584732191;
     public const ulong Gold = 324231297096613888;
     public const ulong EarlyAccess = 333173979801976834;
+    public const ulong Experienced = 568776711467040779;
     public const ulong Survivor = 554431731344736258;
     
     #endif
