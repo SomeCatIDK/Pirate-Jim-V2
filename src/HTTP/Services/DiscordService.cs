@@ -89,10 +89,9 @@ public class DiscordService
         
         var user = guild.GetUser(userId);
 
-        var steamAccounts = records.Where(steamAccount => steamAccount is {InventoryPrivate: false, Verified: true});
         var steamAccountsPretty = new List<FinalRolesRecord>();
         
-        foreach (var steamAccount in steamAccounts)
+        foreach (var steamAccount in records)
         {
             var roleNames = new List<string>();
             
