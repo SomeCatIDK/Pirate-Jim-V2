@@ -22,7 +22,8 @@ public sealed class PirateJim
         // GuildBans is currently unused, but I don't want to forget about it later.
         var discordConfig = new DiscordSocketConfig
         {
-            GatewayIntents = GatewayIntents.Guilds | GatewayIntents.GuildBans | GatewayIntents.GuildMessages | GatewayIntents.GuildMembers | GatewayIntents.MessageContent
+            GatewayIntents = GatewayIntents.Guilds | GatewayIntents.GuildBans | GatewayIntents.GuildMessages | GatewayIntents.GuildMembers | GatewayIntents.MessageContent,
+            AlwaysDownloadUsers = true
         };
 
         DiscordClient = new DiscordSocketClient(discordConfig);
@@ -50,7 +51,7 @@ public sealed class PirateJim
         
         await DiscordClient.StartAsync();
 
-        await DiscordClient.SetGameAsync("V2 time!");
+        await DiscordClient.SetGameAsync("Yarrrr!");
         
         await appealsService.InitializeAsync(this);
 
@@ -71,9 +72,11 @@ public sealed class PirateJim
         
         var roles = new[]
         {
+            #if RELEASE
             UORoles.SDG,
-            UORoles.ModerationTeam,
-            UORoles.Supporter
+            UORoles.Supporter,
+            #endif
+            UORoles.ModerationTeam
         };
 
         // Checks to see if the user has any roles defined the in `roles` local variable.
@@ -81,7 +84,7 @@ public sealed class PirateJim
         if (author.Roles.Select(x => x.Id).Any(roles.Contains))
             return;
         
-        if (!message.Content.ToLowerInvariant().Contains("discord.gg/"))
+        if (!message.Content.Contains("discord.gg/", StringComparison.InvariantCultureIgnoreCase))
             return;
         
         await message.DeleteAsync();

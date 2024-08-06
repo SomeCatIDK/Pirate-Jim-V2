@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if DEBUG
+using System;
 using GenHTTP.Api.Protocol;
 using GenHTTP.Modules.Webservices;
 
@@ -12,3 +13,4 @@ public class ErrorService
         throw new Exception("This is a test of the error handler");
     }
 }
+#endif

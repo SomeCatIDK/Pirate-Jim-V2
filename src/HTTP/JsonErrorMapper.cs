@@ -9,6 +9,7 @@ namespace SomeCatIDK.PirateJim.HTTP;
 
 public class JsonErrorMapper : IErrorMapper<Exception>
 {
+    // This method is called every time an exception is thrown inside a thread managed by GenHTTP.
     public async ValueTask<IResponse?> Map(IRequest request, IHandler handler, Exception error)
     {
         Console.WriteLine(error.Message + error.StackTrace);
@@ -17,6 +18,7 @@ public class JsonErrorMapper : IErrorMapper<Exception>
             .BuildJsonResponse(ResponseStatus.InternalServerError, new ErrorRecord(error.Message, error.StackTrace ?? string.Empty));
     }
 
+    // 404
     public async ValueTask<IResponse?> GetNotFound(IRequest request, IHandler handler)
     {
         return await request.Respond()

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿#if DEBUG
+using System.Threading.Tasks;
 using GenHTTP.Api.Protocol;
 using GenHTTP.Modules.Webservices;
 using SomeCatIDK.PirateJim.HTTP.Extensions;
@@ -16,3 +17,4 @@ public class TestService
         return await request.Respond().BuildJsonResponse(ResponseStatus.OK, new MessageRecord(Message));
     }
 }
+#endif
