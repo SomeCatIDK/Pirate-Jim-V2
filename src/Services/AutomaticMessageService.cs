@@ -13,9 +13,13 @@ public class AutomaticMessageService : IService
 
     public const string TradingMessage = "Welcome to #trading.\n\n**__Warning!__**\n You should **ONLY** trade through Steam. **DO NOT** use PayPal, Venmo, or any other service to conduct a trade. **DO NOT** trade for real money.\n\nDo not advertise:\n- Real-money trades (RMT)\n- Scams, cheats, or automation tools\n- Accounts\n\n__We cannot help you if you've lost your items, and didn't receive what you were supposed to!__\nPlease read this [Steam page](<https://help.steampowered.com/en/faqs/view/18A5-167F-C27B-64A0>).";
 
+    public const string LookingForGroupMessage = " Welcome to #looking-for-group.\n\nYou may not:\n- Advertise clans or other discord servers.\n - Promote the usage of game cheats.\n - Share servers in which you are directly affiliated with the staff or owner.";
+
     public ulong? LastAdvertisingMessage;
 
     public ulong? LastTradingMessage;
+
+    public ulong? LastLookingForGroupMessage;
 
     public AutomaticMessageService(PirateJim bot)
     {
@@ -39,7 +43,7 @@ public class AutomaticMessageService : IService
             case UOChannels.Modding:
                 // This is more of a joke thing. We normally start a chain of messages in #modding that is just the word 'modding'.
                 // Underestimated their ability to misuse this feature.
-                if (message.Content.ToLowerInvariant().Contains("modding") && message.Content.Length < 10)
+                if (message.Content.ToLowerInvariant().Contains("modding") && message.Content.Length < 12)
                 {
                     await message.AddReactionAsync(new Emoji("♥"));
                 }
@@ -79,10 +83,18 @@ public class AutomaticMessageService : IService
 
                 LastTradingMessage = secondMsg.Id;
                 break;
+            case UOChannels.LookingForGroup:
+                var thirdMsg = await message.Channel.SendMessageAsync(LookingForGroupMessage);
+
+                if (LastLookingForGroupMessage != null)
+                    await message.Channel.DeleteMessageAsync(LastLookingForGroupMessage.Value);
+
+                LastLookingForGroupMessage = thirdMsg.Id;
+                break;
             case UOChannels.Modding:
                 // This is more of a joke thing. We normally start a chain of messages in #modding that is just the word 'modding'.
                 // Underestimated their ability to misuse this feature.
-                if (message.Content.ToLowerInvariant().Contains("modding") && message.Content.Length < 10)
+                if (message.Content.ToLowerInvariant().Contains("modding") && message.Content.Length < 12)
                 {
                     await message.AddReactionAsync(new Emoji("♥"));
                 }
