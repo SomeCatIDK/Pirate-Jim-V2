@@ -3,18 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord;
+using Discord.Rest;
 using Discord.WebSocket;
+using GenHTTP.Engine;
 using SomeCatIDK.PirateJim.Model;
 
 namespace SomeCatIDK.PirateJim.Services;
 
-public class RemoveInvalidGuideTagService : IService
+public class RemoveInvalidGuideTagService : IService, IInitializableService
 {
     private const string GuideTag = "Guide";
 
     private readonly Dictionary<ulong, ulong> _guideTagIds = new();
 
     private readonly PirateJim _bot;
+
+    private ulong? LastAuditLog;
 
     public RemoveInvalidGuideTagService(PirateJim bot)
     {
@@ -49,22 +53,51 @@ public class RemoveInvalidGuideTagService : IService
 
     private async Task OnThreadCreated(SocketThreadChannel post)
     {
-        await RemoveInvalidGuideTagAsync(post);
+        await RemoveInvalidGuideTagAsync(post, post.Owner?.GuildUser);
     }
 
     private async Task OnThreadUpdated(Cacheable<SocketThreadChannel, ulong> cachedPost, SocketThreadChannel updatedPost)
     {
-        await RemoveInvalidGuideTagAsync(updatedPost);
+        await RemoveInvalidGuideTagAsync(updatedPost, await GetModeratorThreadUpdated(updatedPost) ?? updatedPost.Owner?.GuildUser);
     }
 
-    private async Task RemoveInvalidGuideTagAsync(SocketThreadChannel post)
+    private async Task<IGuildUser?> GetModeratorThreadUpdated(SocketThreadChannel updatedPost)
     {
-        if (post.Owner == null)
+        await foreach (var logs in updatedPost.Guild.GetAuditLogsAsync(4, actionType: ActionType.ThreadUpdate))
         {
-            Console.WriteLine($"Post owner is null. Post Name: {post.Name} | Post Channel: {post.ParentChannel.Name}");
-            return;
+            if (logs == null)
+                continue;
+
+            RestAuditLogEntry? logEntry = logs.FirstOrDefault(log =>
+            {
+                if (LastAuditLog != null && log.Id <= LastAuditLog) // AuditLog too old / Already consumed
+                    return false;
+
+                if (log.CreatedAt.DateTime.AddSeconds(30) < DateTime.Now) // AuditLog too old
+                    return false;
+
+                if (log.Data is not ThreadUpdateAuditLogData logData)
+                    return false;
+
+                if (logData.Thread == null) // Thread has been Deleted
+                    return false;
+
+                return logData.Thread.Id == updatedPost.Id;
+            });
+
+            if (logEntry == null)
+                continue;
+
+            LastAuditLog = logEntry.Id;
+
+            return await ((IGuild)updatedPost.Guild).GetUserAsync(logEntry.User.Id, CacheMode.AllowDownload);
         }
 
+        return null;
+    }
+
+    private async Task RemoveInvalidGuideTagAsync(SocketThreadChannel post, IGuildUser? guildUser)
+    {
         if (post.AppliedTags == null)
             return;
 
@@ -73,8 +106,19 @@ public class RemoveInvalidGuideTagService : IService
         
         if (!post.AppliedTags.Contains(guideTagId))
             return;
-        
-        if (!post.Owner.GuildUser.GuildPermissions.ManageThreads)
+
+        if (guildUser == null)
+        {
+            guildUser = await ((IGuild)post.Guild).GetUserAsync(((IThreadChannel)post).OwnerId, CacheMode.AllowDownload);
+        }
+
+        if (guildUser == null)
+        {
+            Console.WriteLine($"GuildUser is null. Post name: {post.Name} | Channel name: {post.ParentChannel.Name}");
+            return;
+        }
+
+        if (guildUser.GuildPermissions.ManageThreads)
             return;
 
         var newTags = post.AppliedTags.ToList();
