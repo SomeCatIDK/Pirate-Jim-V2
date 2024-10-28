@@ -50,7 +50,6 @@ public sealed class PirateJim
         await DiscordClient.StartAsync();
 
         await DiscordClient.SetGameAsync("Yarrrr!");
-        await appealsService.InitializeAsync(this);
       
         foreach (var service in _services)
         {

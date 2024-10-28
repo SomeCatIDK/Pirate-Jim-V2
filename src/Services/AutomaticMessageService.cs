@@ -83,6 +83,7 @@ public class AutomaticMessageService : IService
 
                 LastTradingMessage = secondMsg.Id;
                 break;
+#if RELEASE
             case UOChannels.LookingForGroup:
                 var thirdMsg = await message.Channel.SendMessageAsync(LookingForGroupMessage);
 
@@ -91,6 +92,7 @@ public class AutomaticMessageService : IService
 
                 LastLookingForGroupMessage = thirdMsg.Id;
                 break;
+#endif
             case UOChannels.Modding:
                 // This is more of a joke thing. We normally start a chain of messages in #modding that is just the word 'modding'.
                 // Underestimated their ability to misuse this feature.
