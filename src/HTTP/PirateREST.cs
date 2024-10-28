@@ -24,18 +24,18 @@ public static class PirateREST
 #endif
         
         var testService = Layout.Create()
-            #if DEBUG
+#if DEBUG
             .AddService<TestService>("test")
             .AddService<ErrorService>("error")
-            #endif
+#endif
             .AddService<DiscordService>("oauth2")
             .Add(ErrorHandler.From(new JsonErrorMapper()))
             .Add(CorsPolicy.Permissive());
 
         Host.Create()
-            #if DEBUG
+#if DEBUG
             .Development()
-            #endif
+#endif
             .Handler(testService)
             .Console()
             .Defaults()
