@@ -19,8 +19,7 @@ public class PirateJimDbContext : DbContext
 
     public PirateJimDbContext()
     {
-        var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        _dbPath = Path.Join(path, "PirateJim.db");
+        _dbPath = "./PirateJim.db";
     }
 
     // Set primary key for UserTimeouts to be both the ChannelID and the UserID since neither are unique by themselves,
