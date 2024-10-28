@@ -54,7 +54,7 @@ public class DiscordService
         // Request body requires '?code=' at the end as this is how Discord passes the codes.
         // 'code' is used by OAuth2 to fetch a user token.
         if (!request.Query.TryGetValue("code", out var code))
-            return await request.Respond().BuildJsonResponse(ResponseStatus.BadRequest, new MessageRecord(BadData));
+            return await request.Respond().BuildJsonResponse(ResponseStatus.BadRequest, new MessageRecord(BadData + "\nCode was not found in query."));
 
         // This HttpClient is used to interact with the token itself.
         // This client is authenticated using the bot's information.
@@ -66,7 +66,7 @@ public class DiscordService
         var token = await ExchangeUserToken(botAuthenticatedClient, code);
         
         if (token == string.Empty)
-            return await request.Respond().BuildJsonResponse(ResponseStatus.BadRequest, new MessageRecord(BadData));
+            return await request.Respond().BuildJsonResponse(ResponseStatus.BadRequest, new MessageRecord(BadData + "\n Token was "));
         
         // Create an HttpClient authenticated with the user token.
         using var userAuthenticatedClient = new HttpClient();
@@ -153,9 +153,9 @@ public class DiscordService
     {
         // This is the body of the POST request.
         KeyValuePair<string, string>[] tokenBodyPairs = [
-            new KeyValuePair<string, string>("code", code), // This is the code returned by Discord during the first OAuth2 step.
-            new KeyValuePair<string, string>("grant_type", "authorization_code"),
-            new KeyValuePair<string, string>("redirect_uri", "http://graybad1.net:8080/oauth2"),// FOR MY LOCAL TESTING
+            new ("code", code), // This is the code returned by Discord during the first OAuth2 step.
+            new ("grant_type", "authorization_code"),
+            new ("redirect_uri", "https://discordbot.smartlydressedgames.com/oauth2")
         ];
 
         // Formats the body with 'x-www-form-urlencoded'
