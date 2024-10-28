@@ -1,5 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
+using SomeCatIDK.PirateJim.HTTP;
 
 namespace SomeCatIDK.PirateJim;
 
@@ -7,13 +8,15 @@ public static class Program
 {
     private static async Task Main(string[] args)
     {
-        ThreadPool.QueueUserWorkItem(async (o) =>
+        var botClient = new PirateJim();
+        
+        ThreadPool.QueueUserWorkItem(async _ =>
         {
-            var botClient = new PirateJim();
             await botClient.Initialize();
         });
+        
+        PirateREST.Initialize(botClient);
 
-        var RESTClient = new PirateREST();
-        await RESTClient.Initialize();
+        await Task.CompletedTask;
     }
 }

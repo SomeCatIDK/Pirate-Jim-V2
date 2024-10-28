@@ -14,7 +14,7 @@ public sealed class PirateJim
     public DiscordSocketClient DiscordClient { get; private set; } = null!;
 
     // These are unused at the moment, will have uses later.
-    private readonly List<IService> _services = new();
+    private readonly List<IService> _services = [];
     public IEnumerable<IService> Services => _services.AsReadOnly();
 
     public async Task Initialize()
@@ -22,7 +22,8 @@ public sealed class PirateJim
         // GuildBans is currently unused, but I don't want to forget about it later.
         var discordConfig = new DiscordSocketConfig
         {
-            GatewayIntents = GatewayIntents.Guilds | GatewayIntents.GuildBans | GatewayIntents.GuildMessages | GatewayIntents.GuildMembers | GatewayIntents.MessageContent
+            GatewayIntents = GatewayIntents.Guilds | GatewayIntents.GuildBans | GatewayIntents.GuildMessages | GatewayIntents.GuildMembers | GatewayIntents.MessageContent,
+            AlwaysDownloadUsers = true
         };
 
         DiscordClient = new DiscordSocketClient(discordConfig);
@@ -48,8 +49,9 @@ public sealed class PirateJim
         
         await DiscordClient.StartAsync();
 
-        await DiscordClient.SetGameAsync("V2 time!");
-
+        await DiscordClient.SetGameAsync("Yarrrr!");
+        await appealsService.InitializeAsync(this);
+      
         foreach (var service in _services)
         {
             if (service is IInitializableService initializableService)
@@ -71,9 +73,11 @@ public sealed class PirateJim
         
         var roles = new[]
         {
+            #if RELEASE
             UORoles.SDG,
-            UORoles.ModerationTeam,
-            UORoles.Supporter
+            UORoles.Supporter,
+            #endif
+            UORoles.ModerationTeam
         };
 
         // Checks to see if the user has any roles defined the in `roles` local variable.
