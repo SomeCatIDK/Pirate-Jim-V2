@@ -63,7 +63,7 @@ public class DiscordService
         var token = await ExchangeUserToken(botAuthenticatedClient, code);
         
         if (token == null)
-            return await request.Respond().BuildJsonResponse(ResponseStatus.BadRequest, new MessageRecord("Authentication failed, Discord's servers may be down. Please report this to an administrator."));
+            return await request.Respond().BuildJsonResponse(ResponseStatus.BadRequest, new MessageRecord("Authentication failed, the data submitted to Discord's server is invalid. This will happen if you refresh the page. Please use the link found on Discord to try again."));
         
         // Create an HttpClient authenticated with the user token.
         using var userAuthenticatedClient = new HttpClient();
