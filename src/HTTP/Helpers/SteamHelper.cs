@@ -9,7 +9,7 @@ namespace SomeCatIDK.PirateJim.HTTP.Helpers;
 
 public static class SteamHelper
 {
-    public static async ValueTask<SteamItemsRecord> GetSteamItems(ulong steamId, bool verified)
+    public static async ValueTask<SteamItemsRecord?> GetSteamItems(ulong steamId, bool verified)
     {
         var client = new HttpClient();
 
@@ -22,8 +22,9 @@ public static class SteamHelper
 
         if (response.StatusCode == HttpStatusCode.Forbidden)
             return new SteamItemsRecord(steamId, true, verified, []);
-        
-        response.EnsureSuccessStatusCode();
+
+        if (!response.IsSuccessStatusCode)
+            return null;
 
         if (!verified)
             return new SteamItemsRecord(steamId, false, verified, []);

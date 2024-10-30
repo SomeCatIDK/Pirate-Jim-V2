@@ -15,7 +15,7 @@ public class JsonErrorMapper : IErrorMapper<Exception>
         Console.WriteLine(error.Message + error.StackTrace);
         
         return await request.Respond()
-            .BuildJsonResponse(ResponseStatus.InternalServerError, new ErrorRecord(error.Message, error.StackTrace ?? string.Empty));
+            .BuildJsonResponse(ResponseStatus.InternalServerError, new MessageRecord("An internal error occured, please report this to an administrator: " + error.Message));
     }
 
     // 404

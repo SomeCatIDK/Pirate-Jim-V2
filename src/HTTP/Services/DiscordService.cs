@@ -21,9 +21,6 @@ public class DiscordService
     private readonly ulong _clientId;
     private readonly string _clientSecret;
 
-    private const string BadData =
-        "Improper data was transmitted to Pirate Jim. Please use the link provided on Discord to try again. This may happen if the page is refreshed.";
-    
     public DiscordService()
     {
         // Retrieve Discord's assigned ids to our bot.
@@ -54,7 +51,7 @@ public class DiscordService
         // Request body requires '?code=' at the end as this is how Discord passes the codes.
         // 'code' is used by OAuth2 to fetch a user token.
         if (!request.Query.TryGetValue("code", out var code))
-            return await request.Respond().BuildJsonResponse(ResponseStatus.BadRequest, new MessageRecord(BadData + "\nCode was not found in query."));
+            return await request.Respond().BuildJsonResponse(ResponseStatus.BadRequest, new MessageRecord("Code was not found in query, please use the link found on Discord to try again."));
 
         // This HttpClient is used to interact with the token itself.
         // This client is authenticated using the bot's information.
@@ -65,8 +62,8 @@ public class DiscordService
         // Exchanges code for a user token.
         var token = await ExchangeUserToken(botAuthenticatedClient, code);
         
-        if (token == string.Empty)
-            return await request.Respond().BuildJsonResponse(ResponseStatus.BadRequest, new MessageRecord(BadData + "\n Token was "));
+        if (token == null)
+            return await request.Respond().BuildJsonResponse(ResponseStatus.BadRequest, new MessageRecord("Authentication failed, Discord's servers may be down. Please report this to an administrator."));
         
         // Create an HttpClient authenticated with the user token.
         using var userAuthenticatedClient = new HttpClient();
@@ -77,11 +74,17 @@ public class DiscordService
 
         var connections = await GetUserConnections(userAuthenticatedClient);
 
+        if (connections == null)
+            return await request.Respond().BuildJsonResponse(ResponseStatus.BadRequest, new MessageRecord("Authentication failed, Discord's servers may be down. Please report this to an administrator."));
+        
         var records = new List<SteamItemsRecord>();
         
         foreach (var steamConnection in connections.Accounts.Where(x => x.EAccountType == EAccountType.Steam))
         {
             var items = await SteamHelper.GetSteamItems(ulong.Parse(steamConnection.Id), steamConnection.Verified);
+            
+            if (items == null)
+                return await request.Respond().BuildJsonResponse(ResponseStatus.InternalServerError, new MessageRecord("Steam's servers encountered an internal error. Steam may be down for maintenance, please try again later."));
             
             records.Add(items);
         }
@@ -149,7 +152,7 @@ public class DiscordService
         return await request.Respond().BuildJsonResponse(ResponseStatus.OK, steamAccountsPretty);
     }
 
-    private static async ValueTask<string> ExchangeUserToken(HttpClient client, string code)
+    private static async ValueTask<string?> ExchangeUserToken(HttpClient client, string code)
     {
         // This is the body of the POST request.
         KeyValuePair<string, string>[] tokenBodyPairs = [
@@ -170,11 +173,9 @@ public class DiscordService
 
         var result = await client.SendAsync(tokenAuthRequest);
 
-        if (result.StatusCode == HttpStatusCode.BadRequest)
-            return string.Empty;
+        if (!result.IsSuccessStatusCode)
+            return null;
         
-        result.EnsureSuccessStatusCode();
-
         // Read response body
         var resultContent = await result.Content.ReadAsStringAsync();
 
@@ -202,7 +203,7 @@ public class DiscordService
         };
 
         var response = await client.SendAsync(revokeRequest);
-
+        
         response.EnsureSuccessStatusCode();
     }
 
@@ -219,7 +220,7 @@ public class DiscordService
 
         // Check status code
         if (!userResult.IsSuccessStatusCode)
-            throw new Exception($"Discord API returned status code: {userResult.StatusCode}");
+            return 0;
 
         // Read JObject from the 'id' field
         var userIdObject = JObject.Parse(await userResult.Content.ReadAsStringAsync())["id"];
@@ -229,7 +230,7 @@ public class DiscordService
         return ulong.Parse(userIdString);
     }
 
-    private static async ValueTask<DiscordUserConnections> GetUserConnections(HttpClient client)
+    private static async ValueTask<DiscordUserConnections?> GetUserConnections(HttpClient client)
     {
         var connectionsRequest = new HttpRequestMessage
         {
@@ -238,8 +239,9 @@ public class DiscordService
         };
 
         var result = await client.SendAsync(connectionsRequest);
-        
-        result.EnsureSuccessStatusCode();
+
+        if (!result.IsSuccessStatusCode)
+            return null;
 
         var jsonArray = JArray.Parse(await result.Content.ReadAsStringAsync());
 
