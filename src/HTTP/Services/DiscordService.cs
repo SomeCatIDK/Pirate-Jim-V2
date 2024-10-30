@@ -141,7 +141,20 @@ public class DiscordService
                 await user.AddRoleAsync(UORoles.EarlyAccess);
             }
 
-            steamAccountsPretty.Add(new FinalRolesRecord(steamAccount.SteamId, steamAccount.InventoryPrivate, steamAccount.Verified, roleNames.ToArray()));
+            var message = string.Empty;
+            
+            if (steamAccount.InventoryPrivate)
+                message = "Your Steam inventory is set to private or friends-only. Please change your inventory privacy setting to public. ";
+
+            if (!steamAccount.Verified)
+                message += "The link between your Steam and Discord account is not verified. Please unlink and relink your accounts through Discord's settings. ";
+
+            if (!steamAccount.InventoryPrivate && steamAccount.Verified && steamAccount.Items.Length == 0)
+                message = "No eligible roles were found. Please review the roles on our Discord server. If you believe this is an error, please contact an administrator.";
+            
+            message = message != string.Empty ? message.Remove(message.Length - 1, 1) : "No errors encountered";
+            
+            steamAccountsPretty.Add(new FinalRolesRecord(steamAccount.SteamId, message, roleNames.ToArray()));
         }
 
         if (steamAccountsPretty.Count == 0)
