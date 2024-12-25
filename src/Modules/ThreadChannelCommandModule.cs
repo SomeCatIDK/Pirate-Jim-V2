@@ -9,10 +9,18 @@ namespace SomeCatIDK.PirateJim.Modules;
 [Group("thread", "Commands that manage threads.")]
 public class ThreadChannelCommandModule : InteractionModuleBase
 {
-    [RequireRole(UORoles.ModerationTeam)]
     [SlashCommand("close", "Closes the thread.")]
     public async Task CloseThread(string reason)
     {
+
+        var guildUser = await Context.Guild.GetUserAsync(Context.User.Id);
+
+        if (!guildUser.RoleIds.Contains(UORoles.ModerationTeam) && !guildUser.RoleIds.Contains(UORoles.Supporter))
+        {
+            await RespondAsync("You do not have the required roles to execute this command!", ephemeral: true);
+            return;
+        }
+
         if (Context.Channel is not IThreadChannel channel)
         {
             await RespondAsync("The channel in which this command was executed is not a thread.", ephemeral: true);
