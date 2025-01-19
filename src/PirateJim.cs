@@ -91,11 +91,14 @@ public sealed class PirateJim
         await message.DeleteAsync();
     }
     
+    private static readonly object LogLock = new object();
     
     // TODO: Expand into proper console/file logging.
     private static async Task OnLog(LogMessage msg)
     {
-        Console.WriteLine(msg.ToString());
+        lock (LogLock)
+            Console.WriteLine(msg.ToString());
+
         await Task.CompletedTask;
     }
 }
