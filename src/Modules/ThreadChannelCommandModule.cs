@@ -15,7 +15,11 @@ public class ThreadChannelCommandModule : InteractionModuleBase
 
         var guildUser = await Context.Guild.GetUserAsync(Context.User.Id);
 
-        if (!guildUser.RoleIds.Contains(UORoles.ModerationTeam) && !guildUser.RoleIds.Contains(UORoles.Supporter))
+        if (!guildUser.RoleIds.Contains(UORoles.ModerationTeam)
+#if RELEASE
+            && !guildUser.RoleIds.Contains(UORoles.Supporter)
+#endif
+            )
         {
             await RespondAsync("You do not have the required roles to execute this command!", ephemeral: true);
             return;

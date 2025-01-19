@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SomeCatIDK.PirateJim.Model;
 
@@ -10,9 +11,11 @@ using SomeCatIDK.PirateJim.Model;
 namespace SomeCatIDK.PirateJim.Migrations
 {
     [DbContext(typeof(PirateJimDbContext))]
-    partial class PirateJimDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250119153811_AutoMessageChannels")]
+    partial class AutoMessageChannels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.7");
