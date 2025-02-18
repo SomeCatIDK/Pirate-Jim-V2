@@ -12,7 +12,7 @@ namespace SomeCatIDK.PirateJim.src.Modules
     {
         [RequireRole(UORoles.ModerationTeam)]
         [SlashCommand("clearnonrelevant", "Clears all non-relevant invites.")]
-        public async Task ClearNonRelevant()
+        public async Task ClearNonRelevant(int inviteCount, int belowUses)
         {
             var invites = await Context.Guild.GetInvitesAsync();
 
@@ -23,8 +23,11 @@ namespace SomeCatIDK.PirateJim.src.Modules
                 if (invite.Inviter.Id == 192338846971723776 || invite.Inviter.Id == 178374897897177088)
                     continue;
 
-                if (invite.Uses >= 10)
+                if (invite.Uses >= belowUses)
                     continue;
+
+                if (num >= inviteCount)
+                    break;
 
                 await invite.DeleteAsync();
                 num++;
