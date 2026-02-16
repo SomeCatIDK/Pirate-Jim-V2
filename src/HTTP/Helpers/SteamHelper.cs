@@ -15,7 +15,7 @@ public static class SteamHelper
 
         var request = new HttpRequestMessage
         {
-            RequestUri = new Uri($"https://steamcommunity.com/inventory/{steamId}/304930/2?l=english&count=5000")
+            RequestUri = new Uri($"https://steamcommunity.com/inventory/{steamId}/304930/2")
         };
 
         var response = await client.SendAsync(request);

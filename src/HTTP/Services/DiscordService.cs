@@ -51,7 +51,7 @@ public class DiscordService
         // Request body requires '?code=' at the end as this is how Discord passes the codes.
         // 'code' is used by OAuth2 to fetch a user token.
         if (!request.Query.TryGetValue("code", out var code))
-            return await request.Respond().BuildJsonResponse(ResponseStatus.BadRequest, new MessageRecord("Code was not found in query, please use the link found on Discord to try again."));
+            return await request.BuildJsonResponse(ResponseStatus.BadRequest, new MessageRecord("Code was not found in query, please use the link found on Discord to try again."));
 
         // This HttpClient is used to interact with the token itself.
         // This client is authenticated using the bot's information.
@@ -63,7 +63,7 @@ public class DiscordService
         var token = await ExchangeUserToken(botAuthenticatedClient, code);
         
         if (token == null)
-            return await request.Respond().BuildJsonResponse(ResponseStatus.BadRequest, new MessageRecord("Authentication failed, the data submitted to Discord's server is invalid. This will happen if you refresh the page. Please use the link found on Discord to try again."));
+            return await request.BuildJsonResponse(ResponseStatus.BadRequest, new MessageRecord("Authentication failed, the data submitted to Discord's server is invalid. This will happen if you refresh the page. Please use the link found on Discord to try again."));
         
         // Create an HttpClient authenticated with the user token.
         using var userAuthenticatedClient = new HttpClient();
@@ -75,7 +75,7 @@ public class DiscordService
         var connections = await GetUserConnections(userAuthenticatedClient);
 
         if (connections == null)
-            return await request.Respond().BuildJsonResponse(ResponseStatus.BadRequest, new MessageRecord("Authentication failed, Discord's servers may be down. Please report this to an administrator."));
+            return await request.BuildJsonResponse(ResponseStatus.BadRequest, new MessageRecord("Authentication failed, Discord's servers may be down. Please report this to an administrator."));
         
         var records = new List<SteamItemsRecord>();
         
@@ -84,7 +84,7 @@ public class DiscordService
             var items = await SteamHelper.GetSteamItems(ulong.Parse(steamConnection.Id), steamConnection.Verified);
             
             if (items == null)
-                return await request.Respond().BuildJsonResponse(ResponseStatus.InternalServerError, new MessageRecord("Steam's servers encountered an internal error. Steam may be down for maintenance, please try again later."));
+                return await request.BuildJsonResponse(ResponseStatus.InternalServerError, new MessageRecord("Steam's servers encountered an internal error. Steam may be down for maintenance, please try again later."));
             
             records.Add(items);
         }
@@ -159,10 +159,10 @@ public class DiscordService
 
         if (steamAccountsPretty.Count == 0)
         {
-            return await request.Respond().BuildJsonResponse(ResponseStatus.OK, new MessageRecord("No connected accounts were found. Please link your accounts for which you wish to receive roles."));
+            return await request.BuildJsonResponse(ResponseStatus.Ok, new MessageRecord("No connected accounts were found. Please link your accounts for which you wish to receive roles."));
         }
         
-        return await request.Respond().BuildJsonResponse(ResponseStatus.OK, steamAccountsPretty);
+        return await request.BuildJsonResponse(ResponseStatus.Ok, steamAccountsPretty);
     }
 
     private static async ValueTask<string?> ExchangeUserToken(HttpClient client, string code)

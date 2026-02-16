@@ -37,11 +37,7 @@ public sealed class PirateJim
         _services.Add(new AppealsAutoCloseService(this));
         _services.Add(new RatingChannelService(this));
         _services.Add(new SurvivorRoleService(this));
-        
         _services.Add(new AutomaticMessageService(this));
-
-        DiscordClient.MessageReceived += InviteChecker;
-        
         _services.Add(new RemoveInvalidGuideTagService(this));
         
         await DiscordClient.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("PJ_TOKEN"));
@@ -58,37 +54,6 @@ public sealed class PirateJim
 
         // Keep current Task alive to prevent program from closing.
         await Task.Delay(-1);
-    }
-
-    // TODO: move this somewhere else and refine it.
-    private static async Task InviteChecker(SocketMessage message)
-    {
-        if (message.Author is not SocketGuildUser author)
-            return;
-
-        if (message.Channel.Id == UOChannels.Advertising)
-            return;
-        
-        var roles = new[]
-        {
-            #if RELEASE
-            UORoles.SDG,
-            UORoles.Supporter,
-            #endif
-            UORoles.ModerationTeam
-        };
-
-        // Checks to see if the user has any roles defined the in `roles` local variable.
-        // This syntax is hellish, but it's only one line.
-        if (author.Roles.Select(x => x.Id).Any(roles.Contains))
-            return;
-
-        var content = message.Content.ToLowerInvariant();
-
-        if (!content.Contains("discord.gg/") && !content.Contains("discord.com/invite/"))
-            return;
-        
-        await message.DeleteAsync();
     }
     
     private static readonly object LogLock = new object();

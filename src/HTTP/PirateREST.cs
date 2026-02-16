@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using GenHTTP.Engine;
+using GenHTTP.Engine.Internal;
 using GenHTTP.Modules.ErrorHandling;
 using GenHTTP.Modules.Layouting;
 using GenHTTP.Modules.Practices;
@@ -45,6 +46,6 @@ public static class PirateREST
             .Bind(IPAddress.Any, 80)
             .Bind(IPAddress.Any, 443, certificate)
 #endif
-            .Run();
+            .RunAsync().AsTask().GetAwaiter().GetResult();
     }
 }
