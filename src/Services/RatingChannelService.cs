@@ -40,9 +40,7 @@ public class RatingChannelService : IService
             return;
 
         foreach (var emoji in _ratingEmojis)
-        {
             await message.AddReactionAsync(emoji);
-        }
 
         await Task.CompletedTask;
     }

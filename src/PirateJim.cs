@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
-using SomeCatIDK.PirateJim.Model;
 using SomeCatIDK.PirateJim.Services;
 
 namespace SomeCatIDK.PirateJim;
