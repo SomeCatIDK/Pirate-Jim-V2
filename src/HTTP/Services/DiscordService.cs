@@ -157,9 +157,7 @@ public class DiscordService
         }
 
         if (steamAccountsPretty.Count == 0)
-        {
             return await request.BuildJsonResponse(ResponseStatus.Ok, new MessageRecord("No connected accounts were found. Please link your accounts for which you wish to receive roles."));
-        }
         
         return await request.BuildJsonResponse(ResponseStatus.Ok, steamAccountsPretty);
     }

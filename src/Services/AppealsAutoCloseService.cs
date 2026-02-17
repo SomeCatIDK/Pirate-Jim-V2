@@ -23,8 +23,7 @@ public class AppealsAutoCloseService : IService, IInitializableService
 
         if (channel is not IForumChannel forum)
             return;
-
-
+        
         foreach (var post in await forum.GetActiveThreadsAsync())
         {
             if (post.IsLocked) 

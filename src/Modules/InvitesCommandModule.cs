@@ -14,7 +14,7 @@ namespace SomeCatIDK.PirateJim.src.Modules
         {
             var invites = await Context.Guild.GetInvitesAsync();
 
-            int num = 0;
+            var num = 0;
 
             foreach (var invite in invites)
             {

@@ -25,9 +25,7 @@ public class RatingChannelCommandModule : InteractionModuleBase
             await RespondAsync($"This channel is now a rating channel.");
         }
         else
-        {
             await RespondAsync($"This channel is already a rating channel.");
-        }
 
         await db.SaveChangesAsync();
     }
@@ -48,9 +46,7 @@ public class RatingChannelCommandModule : InteractionModuleBase
             await RespondAsync($"This channel is no longer a rating channel.");
         }
         else
-        {
             await RespondAsync($"This channel is not a rating channel.");
-        }
 
         await db.SaveChangesAsync();
     }

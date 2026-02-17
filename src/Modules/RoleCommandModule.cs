@@ -17,6 +17,7 @@ public class RoleCommandModule : InteractionModuleBase
             await RespondAsync("The specified role cannot be granted.");
             return;
         }
+        
         await user.AddRoleAsync(role);
         await RespondAsync($"Role granted. ✅");
     }
@@ -30,6 +31,7 @@ public class RoleCommandModule : InteractionModuleBase
             await RespondAsync("The specified role cannot be revoked.");
             return;
         }
+        
         await user.RemoveRoleAsync(role);
         await RespondAsync($"Role revoked. ✅");
     }

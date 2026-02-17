@@ -39,13 +39,10 @@ public class AutomaticMessageService : IService
                 // This is more of a joke thing. We normally start a chain of messages in #modding that is just the word 'modding'.
                 // Underestimated their ability to misuse this feature.
                 if (message.Content.ToLowerInvariant().Contains("modding") && message.Content.Length < 12)
-                {
                     await message.AddReactionAsync(new Emoji("♥"));
-                }
                 else
-                {
                     await message.RemoveAllReactionsForEmoteAsync(new Emoji("♥"));
-                }
+                
                 break;
         }
     }
@@ -95,9 +92,8 @@ public class AutomaticMessageService : IService
                 // This is more of a joke thing. We normally start a chain of messages in #modding that is just the word 'modding'.
                 // Underestimated their ability to misuse this feature.
                 if (message.Content.ToLowerInvariant().Contains("modding") && message.Content.Length < 12)
-                {
                     await message.AddReactionAsync(new Emoji("♥"));
-                }
+                
                 break;
         }
 

@@ -64,10 +64,7 @@ public class RemoveInvalidGuideTagService : IService, IInitializableService
     {
         await foreach (var logs in updatedPost.Guild.GetAuditLogsAsync(4, actionType: ActionType.ThreadUpdate))
         {
-            if (logs == null)
-                continue;
-
-            RestAuditLogEntry? logEntry = logs.FirstOrDefault(log =>
+            var logEntry = logs?.FirstOrDefault(log =>
             {
                 if (_lastAuditLog != null && log.Id <= _lastAuditLog) // AuditLog too old / Already consumed
                     return false;

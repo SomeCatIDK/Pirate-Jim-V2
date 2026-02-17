@@ -26,9 +26,7 @@ public class SurvivorRoleService : IService
         var role = author.Roles.FirstOrDefault(x => x.Id == UORoles.Survivor);
 
         if (role == null)
-        {
             await author.AddRoleAsync(UORoles.Survivor);
-        }
         
         await Task.CompletedTask;
     }

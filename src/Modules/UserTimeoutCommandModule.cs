@@ -40,9 +40,7 @@ public class UserTimeoutCommandModule : InteractionModuleBase
         else
         {
             if (timeoutChannel.Time == timeout)
-            {
                 await RespondAsync($"The specified channel's timeout is already set at {timeout} seconds.");
-            }
             else
             {
                 timeoutChannel.Time = timeout;
