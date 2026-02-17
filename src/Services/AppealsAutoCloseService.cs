@@ -37,4 +37,3 @@ public class AppealsAutoCloseService : IService, IInitializableService
         }
     }
 }
-

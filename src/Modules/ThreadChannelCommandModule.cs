@@ -112,4 +112,3 @@ public class ThreadChannelCommandModule : InteractionModuleBase
         await RespondAsync($"Threads unbanned **{user.GlobalName}** (`{user.Id}`).", ephemeral: false);
     }
 }
-

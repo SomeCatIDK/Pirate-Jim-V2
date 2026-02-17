@@ -131,4 +131,3 @@ public class AutomaticMessageService : IService
         return oldLastMessage;
     }
 }
-
