@@ -2,8 +2,7 @@
 using Discord.Interactions;
 using SomeCatIDK.PirateJim.Model;
 
-
-namespace SomeCatIDK.PirateJim.src.Modules
+namespace SomeCatIDK.PirateJim.Modules
 {
     [Group("invites", "Commands that manage invites.")]
     public class InvitesCommandModule : InteractionModuleBase

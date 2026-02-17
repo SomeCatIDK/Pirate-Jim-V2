@@ -9,8 +9,7 @@ namespace SomeCatIDK.PirateJim.Modules;
 [Group("attachment", "Enables and disables whether to block plaintext messages and only allow embeddable attachments.")]
 public class AttachmentChannelCommandModule : InteractionModuleBase
 {
-    [RequireOwner(Group = "ManageChannels")]
-    [RequireUserPermission(ChannelPermission.ManageChannels, Group = "ManageChannels")]
+    [RequireRole(UORoles.ModerationTeam)]
     [SlashCommand("enable", "Enables an attachment channel.")]
     public async Task EnableAttachmentChannel([ChannelTypes(ChannelType.Text)] IChannel channel)
     {
@@ -32,8 +31,7 @@ public class AttachmentChannelCommandModule : InteractionModuleBase
         await db.SaveChangesAsync();
     }
 
-    [RequireOwner(Group = "ManageChannels")]
-    [RequireUserPermission(ChannelPermission.ManageChannels, Group = "ManageChannels")]
+    [RequireRole(UORoles.ModerationTeam)]
     [SlashCommand("disable", "Disables an attachment channel.")]
     public async Task DisableAttachmentChannel([ChannelTypes(ChannelType.Text)] IChannel channel)
     {

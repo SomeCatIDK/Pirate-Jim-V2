@@ -62,7 +62,7 @@ public class AutomaticMessageService : IService
             case UOChannels.Advertising:
                 var advertisingMessage = await message.Channel.SendMessageAsync(AdvertisingMessage);
 
-                ulong? oldAdvertisingMessage = await GetAndUpdateOldLastMessage(message.Channel.Id, advertisingMessage.Id);
+                var oldAdvertisingMessage = await GetAndUpdateOldLastMessage(message.Channel.Id, advertisingMessage.Id);
 
                 if (oldAdvertisingMessage != null)
                     await message.Channel.DeleteMessageAsync(oldAdvertisingMessage.Value);
@@ -71,7 +71,7 @@ public class AutomaticMessageService : IService
             case UOChannels.Trading:
                 var tradingMessage = await message.Channel.SendMessageAsync(TradingMessage);
 
-                ulong? oldTradingMessage = await GetAndUpdateOldLastMessage(message.Channel.Id, tradingMessage.Id);
+                var oldTradingMessage = await GetAndUpdateOldLastMessage(message.Channel.Id, tradingMessage.Id);
 
                 if (oldTradingMessage != null)
                     await message.Channel.DeleteMessageAsync(oldTradingMessage.Value);
@@ -107,7 +107,7 @@ public class AutomaticMessageService : IService
         var lastMessageChannel = db.LastMessageChannels
             .FirstOrDefault(c => c.ChannelId == channelId);
 
-        ulong? oldLastMessage = lastMessageChannel?.MessageId;
+        var oldLastMessage = lastMessageChannel?.MessageId;
 
         if (lastMessageChannel == null)
         {
