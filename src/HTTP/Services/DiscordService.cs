@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -51,7 +50,7 @@ public class DiscordService
         // Request body requires '?code=' at the end as this is how Discord passes the codes.
         // 'code' is used by OAuth2 to fetch a user token.
         if (!request.Query.TryGetValue("code", out var code))
-            return await request.BuildJsonResponse(ResponseStatus.BadRequest, new MessageRecord("Code was not found in query, please use the link found on Discord to try again."));
+            return await request.BuildJsonResponse(ResponseStatus.BadRequest, new MessageRecord("Authentication code was not found in the query, please use the link found on Discord to try again."));
 
         // This HttpClient is used to interact with the token itself.
         // This client is authenticated using the bot's information.
@@ -158,9 +157,7 @@ public class DiscordService
         }
 
         if (steamAccountsPretty.Count == 0)
-        {
             return await request.BuildJsonResponse(ResponseStatus.Ok, new MessageRecord("No connected accounts were found. Please link your accounts for which you wish to receive roles."));
-        }
         
         return await request.BuildJsonResponse(ResponseStatus.Ok, steamAccountsPretty);
     }

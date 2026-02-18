@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
-using SomeCatIDK.PirateJim.Model;
 using SomeCatIDK.PirateJim.Services;
 
 namespace SomeCatIDK.PirateJim;
@@ -30,7 +29,6 @@ public sealed class PirateJim
         DiscordClient.Log += OnLog;
         
         // Initialize the services used by the bot.
-        // TODO: Make it so a guild can disable/enable these as it needs.
         _services.Add(new CommandInteractionService(this));
         _services.Add(new UserTimeoutService(this));
         _services.Add(new AttachmentChannelService(this));
@@ -56,7 +54,7 @@ public sealed class PirateJim
         await Task.Delay(-1);
     }
     
-    private static readonly object LogLock = new object();
+    private static readonly Lock LogLock = new();
     
     // TODO: Expand into proper console/file logging.
     private static async Task OnLog(LogMessage msg)

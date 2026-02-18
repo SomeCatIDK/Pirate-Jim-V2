@@ -1,39 +1,35 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Discord;
+﻿using System.Threading.Tasks;
 using Discord.Interactions;
 using SomeCatIDK.PirateJim.Model;
 
+namespace SomeCatIDK.PirateJim.Modules;
 
-namespace SomeCatIDK.PirateJim.src.Modules
+[Group("invites", "Commands that manage invites.")]
+public class InvitesCommandModule : InteractionModuleBase
 {
-    [Group("invites", "Commands that manage invites.")]
-    public class InvitesCommandModule : InteractionModuleBase
+    [RequireRole(UORoles.ModerationTeam)]
+    [SlashCommand("clearnonrelevant", "Clears all non-relevant invites.")]
+    public async Task ClearNonRelevant(int inviteCount, int belowUses)
     {
-        [RequireRole(UORoles.ModerationTeam)]
-        [SlashCommand("clearnonrelevant", "Clears all non-relevant invites.")]
-        public async Task ClearNonRelevant(int inviteCount, int belowUses)
+        var invites = await Context.Guild.GetInvitesAsync();
+
+        var num = 0;
+
+        foreach (var invite in invites)
         {
-            var invites = await Context.Guild.GetInvitesAsync();
+            if (invite.Inviter.Id == 192338846971723776 || invite.Inviter.Id == 178374897897177088)
+                continue;
 
-            int num = 0;
+            if (invite.Uses >= belowUses)
+                continue;
 
-            foreach (var invite in invites)
-            {
-                if (invite.Inviter.Id == 192338846971723776 || invite.Inviter.Id == 178374897897177088)
-                    continue;
+            if (num >= inviteCount)
+                break;
 
-                if (invite.Uses >= belowUses)
-                    continue;
-
-                if (num >= inviteCount)
-                    break;
-
-                await invite.DeleteAsync();
-                num++;
-            }
-
-            await RespondAsync($"Deleted {num} invites.");
+            await invite.DeleteAsync();
+            num++;
         }
+
+        await RespondAsync($"Deleted {num} invites.");
     }
 }

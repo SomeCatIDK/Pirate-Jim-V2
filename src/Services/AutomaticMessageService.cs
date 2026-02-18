@@ -39,13 +39,10 @@ public class AutomaticMessageService : IService
                 // This is more of a joke thing. We normally start a chain of messages in #modding that is just the word 'modding'.
                 // Underestimated their ability to misuse this feature.
                 if (message.Content.ToLowerInvariant().Contains("modding") && message.Content.Length < 12)
-                {
                     await message.AddReactionAsync(new Emoji("♥"));
-                }
                 else
-                {
                     await message.RemoveAllReactionsForEmoteAsync(new Emoji("♥"));
-                }
+                
                 break;
         }
     }
@@ -65,7 +62,7 @@ public class AutomaticMessageService : IService
             case UOChannels.Advertising:
                 var advertisingMessage = await message.Channel.SendMessageAsync(AdvertisingMessage);
 
-                ulong? oldAdvertisingMessage = await GetAndUpdateOldLastMessage(message.Channel.Id, advertisingMessage.Id);
+                var oldAdvertisingMessage = await GetAndUpdateOldLastMessage(message.Channel.Id, advertisingMessage.Id);
 
                 if (oldAdvertisingMessage != null)
                     await message.Channel.DeleteMessageAsync(oldAdvertisingMessage.Value);
@@ -74,7 +71,7 @@ public class AutomaticMessageService : IService
             case UOChannels.Trading:
                 var tradingMessage = await message.Channel.SendMessageAsync(TradingMessage);
 
-                ulong? oldTradingMessage = await GetAndUpdateOldLastMessage(message.Channel.Id, tradingMessage.Id);
+                var oldTradingMessage = await GetAndUpdateOldLastMessage(message.Channel.Id, tradingMessage.Id);
 
                 if (oldTradingMessage != null)
                     await message.Channel.DeleteMessageAsync(oldTradingMessage.Value);
@@ -95,9 +92,8 @@ public class AutomaticMessageService : IService
                 // This is more of a joke thing. We normally start a chain of messages in #modding that is just the word 'modding'.
                 // Underestimated their ability to misuse this feature.
                 if (message.Content.ToLowerInvariant().Contains("modding") && message.Content.Length < 12)
-                {
                     await message.AddReactionAsync(new Emoji("♥"));
-                }
+                
                 break;
         }
 
@@ -111,7 +107,7 @@ public class AutomaticMessageService : IService
         var lastMessageChannel = db.LastMessageChannels
             .FirstOrDefault(c => c.ChannelId == channelId);
 
-        ulong? oldLastMessage = lastMessageChannel?.MessageId;
+        var oldLastMessage = lastMessageChannel?.MessageId;
 
         if (lastMessageChannel == null)
         {
@@ -135,4 +131,3 @@ public class AutomaticMessageService : IService
         return oldLastMessage;
     }
 }
-

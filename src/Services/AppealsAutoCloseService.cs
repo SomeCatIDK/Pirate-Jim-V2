@@ -19,12 +19,11 @@ public class AppealsAutoCloseService : IService, IInitializableService
 
     public async Task InitializeAsync()
     {
-        var channel = await _bot.DiscordClient.GetChannelAsync(UOChannels.Appeals);
+        var channel = await _bot.DiscordClient.GetChannelAsync(UOChannels.AppealsForum);
 
         if (channel is not IForumChannel forum)
             return;
-
-
+        
         foreach (var post in await forum.GetActiveThreadsAsync())
         {
             if (post.IsLocked) 
@@ -38,4 +37,3 @@ public class AppealsAutoCloseService : IService, IInitializableService
         }
     }
 }
-

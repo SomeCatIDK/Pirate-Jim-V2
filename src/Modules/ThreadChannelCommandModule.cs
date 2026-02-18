@@ -37,7 +37,7 @@ public class ThreadChannelCommandModule : InteractionModuleBase
             .WithColor(Color.DarkGrey)
             .Build(), ephemeral: false);
 
-        await channel.ModifyAsync((ThreadChannelProperties properties) =>
+        await channel.ModifyAsync(properties =>
         {
             properties.Locked = true;
         });
@@ -112,4 +112,3 @@ public class ThreadChannelCommandModule : InteractionModuleBase
         await RespondAsync($"Threads unbanned **{user.GlobalName}** (`{user.Id}`).", ephemeral: false);
     }
 }
-

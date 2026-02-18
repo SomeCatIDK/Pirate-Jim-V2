@@ -10,8 +10,7 @@ namespace SomeCatIDK.PirateJim.Modules;
 [Group("slowmode", "Controls the slowmode properties of a channel.")]
 public class UserTimeoutCommandModule : InteractionModuleBase
 {
-    [RequireOwner(Group = "ManageChannels")]
-    [RequireUserPermission(ChannelPermission.ManageChannels, Group = "ManageChannels")]
+    [RequireRole(UORoles.ModerationTeam)]
     [SlashCommand("add", "Adds a timeout to a channel in seconds.")]
     public async Task AddChannelTimeout([ChannelTypes(ChannelType.Text)] IChannel channel, int timeout)
     {
@@ -40,9 +39,7 @@ public class UserTimeoutCommandModule : InteractionModuleBase
         else
         {
             if (timeoutChannel.Time == timeout)
-            {
                 await RespondAsync($"The specified channel's timeout is already set at {timeout} seconds.");
-            }
             else
             {
                 timeoutChannel.Time = timeout;
@@ -53,8 +50,7 @@ public class UserTimeoutCommandModule : InteractionModuleBase
         await db.SaveChangesAsync();
     }
 
-    [RequireOwner(Group = "ManageChannels")]
-    [RequireUserPermission(ChannelPermission.ManageChannels, Group = "ManageChannels")]
+    [RequireRole(UORoles.ModerationTeam)]
     [SlashCommand("remove", "Removes a timeout to a channel.")]
     public async Task RemoveChannelTimeout([ChannelTypes(ChannelType.Text)] IChannel channel)
     {
@@ -75,8 +71,7 @@ public class UserTimeoutCommandModule : InteractionModuleBase
         await db.SaveChangesAsync();
     }
     
-    [RequireOwner(Group = "ManageMessages")]
-    [RequireUserPermission(ChannelPermission.ManageMessages, Group = "ManageMessages")]
+    [RequireRole(UORoles.ModerationTeam)]
     [SlashCommand("reset", "Removes a timeout to a channel.")]
     public async Task ResetUserTimeout([ChannelTypes(ChannelType.Text)] IChannel channel, IUser user)
     {

@@ -6,7 +6,7 @@ using SomeCatIDK.PirateJim.Model;
 
 namespace SomeCatIDK.PirateJim.Services;
 
-// This service listens for user messages deletes any that don't have exactly 1 embeddable attachment
+// This service listens for user messages deletes any that don't have between 1 and 3 attachments.
 public class AttachmentChannelService : IService
 {
     private readonly string[] _allowedExtensions = { ".jpg", ".jpeg", ".png", ".mp4", ".gif", ".gifv", ".mp3", ".wav", ".ogg", ".mov" };

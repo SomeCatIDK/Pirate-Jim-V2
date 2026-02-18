@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Rest;
 using Discord.WebSocket;
-using GenHTTP.Engine;
 using SomeCatIDK.PirateJim.Model;
 
 namespace SomeCatIDK.PirateJim.Services;
@@ -18,7 +17,7 @@ public class RemoveInvalidGuideTagService : IService, IInitializableService
 
     private readonly PirateJim _bot;
 
-    private ulong? LastAuditLog;
+    private ulong? _lastAuditLog;
 
     public RemoveInvalidGuideTagService(PirateJim bot)
     {
@@ -27,9 +26,9 @@ public class RemoveInvalidGuideTagService : IService, IInitializableService
 
     public async Task InitializeAsync()
     {
-        await RegisterGuideTagAsync(UOChannels.ServerHosting);
-        await RegisterGuideTagAsync(UOChannels.UnturnedSupport);
-        await RegisterGuideTagAsync(UOChannels.ModdingSupport);
+        await RegisterGuideTagAsync(UOChannels.ServerHostingForum);
+        await RegisterGuideTagAsync(UOChannels.UnturnedSupportForum);
+        await RegisterGuideTagAsync(UOChannels.ModdingSupportForum);
 
         _bot.DiscordClient.ThreadCreated += OnThreadCreated;
         _bot.DiscordClient.ThreadUpdated += OnThreadUpdated;
@@ -65,12 +64,9 @@ public class RemoveInvalidGuideTagService : IService, IInitializableService
     {
         await foreach (var logs in updatedPost.Guild.GetAuditLogsAsync(4, actionType: ActionType.ThreadUpdate))
         {
-            if (logs == null)
-                continue;
-
-            RestAuditLogEntry? logEntry = logs.FirstOrDefault(log =>
+            var logEntry = logs?.FirstOrDefault(log =>
             {
-                if (LastAuditLog != null && log.Id <= LastAuditLog) // AuditLog too old / Already consumed
+                if (_lastAuditLog != null && log.Id <= _lastAuditLog) // AuditLog too old / Already consumed
                     return false;
 
                 if (log.CreatedAt.DateTime.AddSeconds(30) < DateTime.Now) // AuditLog too old
@@ -88,9 +84,9 @@ public class RemoveInvalidGuideTagService : IService, IInitializableService
             if (logEntry == null)
                 continue;
 
-            LastAuditLog = logEntry.Id;
+            _lastAuditLog = logEntry.Id;
 
-            return await ((IGuild)updatedPost.Guild).GetUserAsync(logEntry.User.Id, CacheMode.AllowDownload);
+            return await ((IGuild)updatedPost.Guild).GetUserAsync(logEntry.User.Id);
         }
 
         return null;
@@ -107,10 +103,7 @@ public class RemoveInvalidGuideTagService : IService, IInitializableService
         if (!post.AppliedTags.Contains(guideTagId))
             return;
 
-        if (guildUser == null)
-        {
-            guildUser = await ((IGuild)post.Guild).GetUserAsync(((IThreadChannel)post).OwnerId, CacheMode.AllowDownload);
-        }
+        guildUser ??= await ((IGuild) post.Guild).GetUserAsync(((IThreadChannel) post).OwnerId);
 
         if (guildUser == null)
         {

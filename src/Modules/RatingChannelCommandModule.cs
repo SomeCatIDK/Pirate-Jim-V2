@@ -9,8 +9,7 @@ namespace SomeCatIDK.PirateJim.Modules;
 [Group("rating", "Enables and disables whether to add rating reactions to each message.")]
 public class RatingChannelCommandModule : InteractionModuleBase
 {
-    [RequireOwner(Group = "ManageChannels")]
-    [RequireUserPermission(ChannelPermission.ManageChannels, Group = "ManageChannels")]
+    [RequireRole(UORoles.ModerationTeam)]
     [SlashCommand("enable", "Enables a rating channel.")]
     public async Task EnableAttachmentChannel([ChannelTypes(ChannelType.Text)] IChannel channel)
     {
@@ -25,15 +24,12 @@ public class RatingChannelCommandModule : InteractionModuleBase
             await RespondAsync($"This channel is now a rating channel.");
         }
         else
-        {
             await RespondAsync($"This channel is already a rating channel.");
-        }
 
         await db.SaveChangesAsync();
     }
     
-    [RequireOwner(Group = "ManageChannels")]
-    [RequireUserPermission(ChannelPermission.ManageChannels, Group = "ManageChannels")]
+    [RequireRole(UORoles.ModerationTeam)]
     [SlashCommand("disable", "Disables a rating channel.")]
     public async Task DisableAttachmentChannel([ChannelTypes(ChannelType.Text)] IChannel channel)
     {
@@ -48,9 +44,7 @@ public class RatingChannelCommandModule : InteractionModuleBase
             await RespondAsync($"This channel is no longer a rating channel.");
         }
         else
-        {
             await RespondAsync($"This channel is not a rating channel.");
-        }
 
         await db.SaveChangesAsync();
     }
