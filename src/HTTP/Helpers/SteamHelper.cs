@@ -56,6 +56,9 @@ public static class SteamHelper
         if (data.Contains(FormatString("Crimson Beret")))
             items.Add(ESteamItem.CrimsonBeret);
 
+        if (data.Contains(FormatString("BattlEye Halo")))
+            items.Add(ESteamItem.BattlEyeHalo);
+
         return new SteamItemsRecord(steamId, false, verified, items.ToArray());
     }
 }

@@ -14,5 +14,6 @@ public enum ESteamItem
     ExperiencedBeret,
     DebuggersBeret,
     CrimsonBeret,
-    WhiteHat
+    WhiteHat,
+    BattlEyeHalo
 }
