@@ -140,6 +140,12 @@ public class DiscordService
                 await user.AddRoleAsync(UORoles.EarlyAccess);
             }
 
+            if (steamAccount.Items.Contains(ESteamItem.BattlEyeHalo))
+            {
+                roleNames.Add("Golden Halo");
+                await user.AddRoleAsync(UORoles.GoldenHalo);
+            }
+
             var message = string.Empty;
             
             if (steamAccount.InventoryPrivate)
