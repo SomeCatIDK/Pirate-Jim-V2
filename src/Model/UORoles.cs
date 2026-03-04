@@ -25,7 +25,7 @@ public static class UORoles
     public const ulong ThreadsBanned = 1269403684195008563;
     public const ulong Survivor = 1269403736090869920;
     public const ulong Experienced = 1269413897371254825;
-    public const ulong GoldenHalo = 1383464876801790122;
+    public const ulong GoldenHalo = 1478789546845016247;
 
     #else
     
@@ -61,6 +61,7 @@ public static class UORoles
     public const ulong EarlyAccess = 333173979801976834;
     public const ulong Experienced = 568776711467040779;
     public const ulong Survivor = 554431731344736258;
+    public const ulong GoldenHalo = 1383464876801790122;
     
 #endif
 
