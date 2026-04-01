@@ -37,6 +37,7 @@ public sealed class PirateJim
         _services.Add(new SurvivorRoleService(this));
         _services.Add(new AutomaticMessageService(this));
         _services.Add(new RemoveInvalidGuideTagService(this));
+        _services.Add(new SolvedPostsService(this));
         
         await DiscordClient.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("PJ_TOKEN"));
         
