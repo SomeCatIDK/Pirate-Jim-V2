@@ -67,13 +67,14 @@ public class SolvedPostsService : IService, IInitializableService
         if (channel is not IForumChannel forum) return;
 
         var tags = forum.Tags.ToList();
-        var tagIndex = tags.FindIndex(t => t.Name == SolvedTag);
+        var tagIndex = tags.FindIndex(t => t.Name.Contains(SolvedTag, StringComparison.InvariantCultureIgnoreCase));
 
         if (tagIndex == -1) return;
 
-        ulong[]? ignoreWithTags = null;
+        var ignoreWithTags = Array.Empty<ulong>();
+        
         if (solvedChannel.IgnoreWithTags != null && solvedChannel.IgnoreWithTags.Length > 0)
-            ignoreWithTags = tags.Where(t => solvedChannel.IgnoreWithTags.Contains(t.Name)).Select(t => t.Id).ToArray();
+            ignoreWithTags = tags.Where(t => solvedChannel.IgnoreWithTags.Contains(t.Name, StringComparer.InvariantCultureIgnoreCase)).Select(t => t.Id).ToArray();
 
         var registeredChannel = new RegisteredSolvedChannel(solvedChannel, tags[tagIndex].Id, ignoreWithTags);
         _registeredSolvedChannels[solvedChannel.ChannelId] = registeredChannel;
