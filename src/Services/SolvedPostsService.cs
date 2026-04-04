@@ -94,6 +94,7 @@ public class SolvedPostsService : IService, IInitializableService
 
             foreach (var activeThread in activeThreads)
             {
+                if (activeThread.Flags.HasFlag(ChannelFlags.Pinned)) continue;
                 if (activeThread.IsLocked || activeThread.IsArchived) continue;
                 if (activeThread.AppliedTags.Any(t => t == solvedChannel.SolvedTag || solvedChannel.IgnoreWithTags.Contains(t))) continue;
                 if ((DateTimeOffset.Now - activeThread.ArchiveTimestamp) <= MarkPostAsInactiveDuration) continue;
