@@ -25,7 +25,7 @@ public class SolvedPostsService : IService, IInitializableService
     private const string StaleDefaultDescription = "This question is considered stale and has been closed.\nIf your question was answered do `/solved`.\nIf your question was **not** answered feel free to bump it or repost.";
 
     public record SolvedForumChannel(ulong ChannelId, string? SolvedDescription = null, string? ReopenDescription = null, string? StaleDescription = null, params string[]? IgnoreWithTags);
-    public record RegisteredSolvedChannel(SolvedForumChannel SolvedChannel, ulong SolvedTag, ulong[]? IgnoreWithTags);
+    public record RegisteredSolvedChannel(SolvedForumChannel SolvedChannel, ulong SolvedTag, ulong[] IgnoreWithTags);
 
     private readonly Dictionary<ulong, RegisteredSolvedChannel> _registeredSolvedChannels = [];
 
@@ -45,8 +45,7 @@ public class SolvedPostsService : IService, IInitializableService
         // Jdance wanted each channel to be able to have their own SolvedDescription
         var serverHosting = new SolvedForumChannel(UOChannels.ServerHostingForum);
         var unturnedSupport = new SolvedForumChannel(UOChannels.UnturnedSupportForum, 
-            SolvedDescription: "When your question is answered either use `/solved` or the button below to mark the question as resolved.\n\n" +
-            "Remember to ask __specific questions__ and provide __relevant details__. You can find tips on how to ask a good question [here](https://discord.com/channels/324229387295653889/1477781539994468392/1477784244360319037).",
+            SolvedDescription: SolvedDefaultDescription + " You can find tips on how to ask a good question [here](https://discord.com/channels/324229387295653889/1477781539994468392/1477784244360319037).",
             IgnoreWithTags: [ "Guide", "Common Issues" ]);
         var moddingSupport = new SolvedForumChannel(UOChannels.ModdingSupportForum, IgnoreWithTags: "Guide");
 
@@ -116,7 +115,7 @@ public class SolvedPostsService : IService, IInitializableService
         if (thread.AppliedTags.Any(t => t == solvedChannel.SolvedTag || solvedChannel.IgnoreWithTags.Contains(t))) return;
 
         var messages = await thread.GetMessagesAsync(4).FlattenAsync();
-        var inactivePostMessage = messages.FirstOrDefault(m => m.Author.Id == _bot.DiscordClient.CurrentUser.Id && m.Components.Count == 0);
+        var inactivePostMessage = messages.FirstOrDefault(m => m.Author.Id == _bot.DiscordClient.CurrentUser.Id && m.Reference == null && m.Embeds.Count > 0 && m.Components.Count == 0);
         if (inactivePostMessage == null) return;
 
         await thread.DeleteMessageAsync(inactivePostMessage);
@@ -127,7 +126,7 @@ public class SolvedPostsService : IService, IInitializableService
         if (thread.HasJoined) return; // SendMessageAsync() makes the bot join the channel which triggers this event again
         if (thread.ParentChannel is not SocketForumChannel forumChannel) return;
         if (!_registeredSolvedChannels.TryGetValue(forumChannel.Id, out var solvedChannel)) return;
-        if (thread.AppliedTags.Any(t => solvedChannel.IgnoreWithTags.Contains(t))) return;
+        if (thread.Owner.GuildUser.GuildPermissions.ManageThreads && thread.AppliedTags.Any(t => solvedChannel.IgnoreWithTags.Contains(t))) return;
         
         var embedMessage = new EmbedBuilder().WithDescription(solvedChannel.SolvedChannel.SolvedDescription ?? SolvedDefaultDescription).WithColor(7506394).Build();
         var button = new ComponentBuilder().WithButton("Mark as Solved", SolvedButtonId, ButtonStyle.Success, Emoji.Parse(":white_check_mark:")).Build();
