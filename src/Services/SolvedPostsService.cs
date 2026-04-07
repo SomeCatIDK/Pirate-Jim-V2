@@ -110,7 +110,7 @@ public class SolvedPostsService : IService, IInitializableService
     private async Task DeleteInactivePostNotification(IChannel channel)
     {
         if (channel is not SocketThreadChannel thread || thread.ParentChannel is not SocketForumChannel forumChannel) return;
-        if (thread.IsLocked) return;
+        if (thread.IsLocked || thread.IsArchived) return;
         if (!_registeredSolvedChannels.TryGetValue(forumChannel.Id, out var solvedChannel)) return;
         if (thread.AppliedTags.Any(t => t == solvedChannel.SolvedTag || solvedChannel.IgnoreWithTags.Contains(t))) return;
 
