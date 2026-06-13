@@ -8,12 +8,15 @@ using SomeCatIDK.PirateJim.Model;
 namespace SomeCatIDK.PirateJim.Services;
 
 // This service listens for user messages and manages user timeouts in timeout channels.
-public class UserTimeoutService : IService
+[Service]
+public class UserTimeoutService : IInitializableService
 {
     public UserTimeoutService(PirateJim bot)
     {
         bot.DiscordClient.MessageReceived += OnMessage;
     }
+
+    public Task InitializeAsync() => Task.CompletedTask;
 
     private static async Task OnMessage(SocketMessage message)
     {

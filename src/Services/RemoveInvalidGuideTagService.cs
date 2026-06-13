@@ -9,7 +9,8 @@ using SomeCatIDK.PirateJim.Model;
 
 namespace SomeCatIDK.PirateJim.Services;
 
-public class RemoveInvalidGuideTagService : IService, IInitializableService
+[Service]
+public class RemoveInvalidGuideTagService : IInitializableService
 {
     private const string GuideTag = "Guide";
 

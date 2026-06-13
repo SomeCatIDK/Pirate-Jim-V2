@@ -5,7 +5,8 @@ using SomeCatIDK.PirateJim.Model;
 
 namespace SomeCatIDK.PirateJim.Services;
 
-public class AppealsAutoCloseService : IService, IInitializableService
+[Service]
+public class AppealsAutoCloseService : IInitializableService
 {
     // ReSharper disable once MemberCanBePrivate.Global
     public const string LockedMessage = "**This post is now locked.**\n\nWe automatically lock every appeal after five days.";

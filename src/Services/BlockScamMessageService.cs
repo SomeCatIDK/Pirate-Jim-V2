@@ -10,7 +10,8 @@ using System.Threading.Tasks;
 
 namespace SomeCatIDK.PirateJim.Services;
 
-public class BlockScamMessageService : IService
+[Service]
+public class BlockScamMessageService : IInitializableService
 {
     private class SuspiciousData
     {
@@ -32,6 +33,8 @@ public class BlockScamMessageService : IService
     {
         bot.DiscordClient.MessageReceived += OnScamMessage;
     }
+
+    public Task InitializeAsync() => Task.CompletedTask;
 
     private async Task OnScamMessage(SocketMessage message)
     {

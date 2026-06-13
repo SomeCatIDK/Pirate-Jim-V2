@@ -13,7 +13,8 @@ using System.Threading.Tasks;
 
 namespace SomeCatIDK.PirateJim.Services;
 
-public class SolvedPostsService : IService, IInitializableService
+[Service]
+public class SolvedPostsService : IInitializableService
 {
     private const string SolvedTag = "Solved";
     

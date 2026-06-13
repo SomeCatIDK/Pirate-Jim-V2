@@ -16,6 +16,13 @@ namespace SomeCatIDK.PirateJim.Modules;
 [Group("support", "Provides useful commands for survivors and supporters.")]
 public class SupportCommandModule : InteractionModuleBase
 {
+    private readonly SolvedPostsService _solvedPostsService;
+
+    public SupportCommandModule(SolvedPostsService solvedPostsService)
+    {
+        _solvedPostsService = solvedPostsService;
+    }
+
 #pragma warning disable SYSLIB0014
     
     [SlashCommand("article", "Finds a SDG support article relevant to the search query.")]
@@ -128,10 +135,7 @@ public class SupportCommandModule : InteractionModuleBase
     [SlashCommand("solved", "Marks the current support thread as solved.")]
     public async Task Solved()
     {
-        // Not sure what the best way to get the service here is
-        if (PirateREST.DiscordApp.Services.FirstOrDefault(s => s is SolvedPostsService) is not SolvedPostsService service) return;
-
-        await service.MarkAsSolvedAsync(null, Context.Channel, Context.User, response =>
+        await _solvedPostsService.MarkAsSolvedAsync(null, Context.Channel, Context.User, response =>
         {
             if (string.IsNullOrEmpty(response)) return RespondAsync("You've marked this post as solved.", flags: MessageFlags.Ephemeral);
             return RespondAsync(response, flags: MessageFlags.Ephemeral);

@@ -7,7 +7,8 @@ using SomeCatIDK.PirateJim.Model;
 namespace SomeCatIDK.PirateJim.Services;
 
 // This service listens for user messages deletes any that don't have between 1 and 3 attachments.
-public class AttachmentChannelService : IService
+[Service]
+public class AttachmentChannelService : IInitializableService
 {
     private readonly string[] _allowedExtensions = { ".jpg", ".jpeg", ".png", ".mp4", ".gif", ".gifv", ".mp3", ".wav", ".ogg", ".mov" };
         
@@ -15,6 +16,8 @@ public class AttachmentChannelService : IService
     {
         bot.DiscordClient.MessageReceived += OnMessage;
     }
+
+    public Task InitializeAsync() => Task.CompletedTask;
 
     private async Task OnMessage(SocketMessage message)
     {

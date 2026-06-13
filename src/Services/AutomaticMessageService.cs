@@ -7,8 +7,8 @@ using SomeCatIDK.PirateJim.Model;
 namespace SomeCatIDK.PirateJim.Services;
 
 // ReSharper disable MemberCanBePrivate.Global
-
-public class AutomaticMessageService : IService
+[Service]
+public class AutomaticMessageService : IInitializableService
 {
     public readonly string AdvertisingMessage = $"Welcome to <#{UOChannels.Advertising}>.\n\n**ONLY THE SERVER OWNER/MANAGER CAN ADVERTISE - DESIGNATE ONE PERSON**\n\nPlease note that you may only post advertisements **every 23 hours**. Advertisements should not promote servers that:\n- Are not relevant to the game *Unturned*.\n- Promote the usage of game cheats.\n- Actively go against [Server Hosting Rules](<https://docs.smartlydressedgames.com/en/stable/servers/server-hosting-rules.html>).\n- Use workarounds to avoid copyright claims, host bans, or other consequences regarding illegal or disallowed practices (i.e. having players manually install workshop mods).";
 
@@ -21,6 +21,8 @@ public class AutomaticMessageService : IService
         bot.DiscordClient.MessageReceived += OnMessage;
         bot.DiscordClient.MessageUpdated += OnMessageUpdate;
     }
+
+    public Task InitializeAsync() => Task.CompletedTask;
 
     // ReSharper disable once MemberCanBeMadeStatic.Local
     private async Task OnMessageUpdate(Cacheable<IMessage, ulong> cacheable, SocketMessage message, ISocketMessageChannel channel)

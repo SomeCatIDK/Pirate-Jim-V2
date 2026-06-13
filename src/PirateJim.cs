@@ -1,10 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Discord;
 using Discord.WebSocket;
+using Microsoft.Extensions.DependencyInjection;
+using SomeCatIDK.PirateJim.Extensions;
 using SomeCatIDK.PirateJim.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
+using ContainerBuilder = Autofac.ContainerBuilder;
 
 namespace SomeCatIDK.PirateJim;
 
@@ -12,9 +19,7 @@ public sealed class PirateJim
 {
     public DiscordSocketClient DiscordClient { get; private set; } = null!;
 
-    // These are unused at the moment, will have uses later.
-    private readonly List<IService> _services = [];
-    public IEnumerable<IService> Services => _services.AsReadOnly();
+    public IContainer ServiceContainer { get; private set; } = null!;
 
     public async Task Initialize()
     {
@@ -25,32 +30,33 @@ public sealed class PirateJim
         };
 
         DiscordClient = new DiscordSocketClient(discordConfig);
-
         DiscordClient.Log += OnLog;
         
         // Initialize the services used by the bot.
-        _services.Add(new CommandInteractionService(this));
-        _services.Add(new UserTimeoutService(this));
-        _services.Add(new AttachmentChannelService(this));
-        _services.Add(new AppealsAutoCloseService(this));
-        _services.Add(new RatingChannelService(this));
-        _services.Add(new SurvivorRoleService(this));
-        _services.Add(new AutomaticMessageService(this));
-        _services.Add(new RemoveInvalidGuideTagService(this));
-        _services.Add(new SolvedPostsService(this));
-        _services.Add(new BlockScamMessageService(this));
+        var containerBuilder = new ContainerBuilder();
         
+        containerBuilder.Populate(new ServiceCollection());
+        containerBuilder.RegisterInstance(this);
+
+        var serviceTypes = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.GetCustomAttribute<ServiceAttribute>() != null);
+        foreach (var serviceType in serviceTypes)
+        {
+            var serviceLifetime = serviceType.GetCustomAttribute<ServiceAttribute>()!.Lifetime;
+
+            containerBuilder.RegisterType(serviceType)
+                .AsImplementedInterfaces().AsSelf()
+                .InstancePerServiceLifetime(serviceLifetime);
+        }
+
+        ServiceContainer = containerBuilder.Build();
+
         await DiscordClient.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("PJ_TOKEN"));
-        
         await DiscordClient.StartAsync();
 
         await DiscordClient.SetGameAsync("Yarrrr!");
 
-        foreach (var service in _services)
-        {
-            if (service is IInitializableService initializableService)
-                await initializableService.InitializeAsync();
-        }
+        var tasks = ServiceContainer.Resolve<IEnumerable<IInitializableService>>().Select(s => s.InitializeAsync());
+        await Task.WhenAll(tasks);
 
         // Keep current Task alive to prevent program from closing.
         await Task.Delay(-1);

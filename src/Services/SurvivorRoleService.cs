@@ -6,12 +6,15 @@ using SomeCatIDK.PirateJim.Model;
 
 namespace SomeCatIDK.PirateJim.Services;
 
-public class SurvivorRoleService : IService
+[Service]
+public class SurvivorRoleService : IInitializableService
 {
     public SurvivorRoleService(PirateJim bot)
     {
         bot.DiscordClient.MessageReceived += OnMessage;
     }
+
+    public Task InitializeAsync() => Task.CompletedTask;
 
     // ReSharper disable once MemberCanBeMadeStatic.Local
     private async Task OnMessage(SocketMessage message)

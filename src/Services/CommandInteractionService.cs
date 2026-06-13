@@ -6,24 +6,29 @@ using Discord.Interactions;
 namespace SomeCatIDK.PirateJim.Services;
 
 // This service registers all commands with Discord's Interaction feature-set.
-public class CommandInteractionService : IService
-{ 
+[Service]
+public class CommandInteractionService : IInitializableService
+{
     private readonly PirateJim _bot;
+    private readonly IServiceProvider _serviceProvider;
     private readonly InteractionService _interactionService;
     
-    public CommandInteractionService(PirateJim bot)
+    public CommandInteractionService(PirateJim bot, IServiceProvider serviceProvider)
     {
         _bot = bot;
+        _serviceProvider = serviceProvider;
         _interactionService = new InteractionService(_bot.DiscordClient.Rest);
         
         _bot.DiscordClient.Ready += OnReady;
     }
-    
+
+    public Task InitializeAsync() => Task.CompletedTask;
+
     private async Task OnReady()
     {
         // Initialize all "modules" in the entry assembly.
         // TODO: GetEntryAssembly() will return the incorrect assembly if the bot is used as a library instead of an executable.
-        await _interactionService.AddModulesAsync(Assembly.GetEntryAssembly(), null);
+        await _interactionService.AddModulesAsync(Assembly.GetEntryAssembly(), _serviceProvider);
         
         // TODO: Use global initializer instead.
         
@@ -41,7 +46,7 @@ public class CommandInteractionService : IService
         _bot.DiscordClient.InteractionCreated += async interaction =>
         {
             var context = new SocketInteractionContext(_bot.DiscordClient, interaction);
-            await _interactionService.ExecuteCommandAsync(context, null);
+            await _interactionService.ExecuteCommandAsync(context, _serviceProvider);
         };
         
         await Task.CompletedTask;

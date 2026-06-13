@@ -7,7 +7,8 @@ using SomeCatIDK.PirateJim.Model;
 namespace SomeCatIDK.PirateJim.Services;
 
 // This service listens for user messages and adds the rating reactions.
-public class RatingChannelService : IService
+[Service]
+public class RatingChannelService : IInitializableService
 {
     private readonly Emoji[] _ratingEmojis = new Emoji[3];
     
@@ -19,6 +20,8 @@ public class RatingChannelService : IService
         _ratingEmojis[1] = Emoji.Parse(":thumbsdown:");
         _ratingEmojis[2] = Emoji.Parse(":heart:");
     }
+
+    public Task InitializeAsync() => Task.CompletedTask;
 
     private async Task OnMessage(SocketMessage message)
     {
