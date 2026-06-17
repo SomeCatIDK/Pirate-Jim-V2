@@ -21,7 +21,7 @@ public class BlockScamMessageService : IInitializableService
         public int GetUniqueChannels() => SuspiciousMessages.DistinctBy(m => m.Channel.Id).Count();
     }
 
-    private const int MinSuspiciousImages = 3;
+    private const int MinSuspiciousImages = 2;
     private const int MinChannels = 2;
     private readonly TimeSpan DetectionDuration = TimeSpan.FromMinutes(1);
 
@@ -63,12 +63,16 @@ public class BlockScamMessageService : IInitializableService
             // At least two Suspicious Messages required to avoid false positives
             if (suspiciousData.SuspiciousMessages.Count < 2) return;
 
-            // Yes, old Suspicious Messages will pass this. But it is extremely unlikely and wouldn't really matter
-            // Fixing it would be removing all outdated suspicious messages each time a new Suspicious Message gets added
             if (suspiciousData.GetUniqueChannels() < MinChannels) return;
 
             DateTimeOffset minCreatedAt = message.CreatedAt - DetectionDuration;
-            if (suspiciousData.SuspiciousMessages[^2].CreatedAt < minCreatedAt) return;
+            if (suspiciousData.SuspiciousMessages[^2].CreatedAt < minCreatedAt)
+            {
+                // Remove outdated Suspicious Messages
+                suspiciousData.SuspiciousMessages.Clear();
+                suspiciousData.SuspiciousMessages.Add(message);
+                return;
+            }
 
             await author.SetTimeOutAsync(TimeoutDuration);
             for (int i = suspiciousData.SuspiciousMessages.Count - 1; i >= 0; i--)
