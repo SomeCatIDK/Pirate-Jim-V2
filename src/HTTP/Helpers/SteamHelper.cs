@@ -27,6 +27,10 @@ public static class SteamHelper
         {
             Console.WriteLine(response.StatusCode);
             Console.WriteLine(response.ReasonPhrase);
+            
+            var error = await response.Content.ReadAsStringAsync();
+            Console.WriteLine(error);
+            
             return null;
         }
 
