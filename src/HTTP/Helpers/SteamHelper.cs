@@ -24,7 +24,11 @@ public static class SteamHelper
             return new SteamItemsRecord(steamId, true, verified, []);
 
         if (!response.IsSuccessStatusCode)
+        {
+            Console.WriteLine(response.StatusCode);
+            Console.WriteLine(response.ReasonPhrase);
             return null;
+        }
 
         if (!verified)
             return new SteamItemsRecord(steamId, false, verified, []);
