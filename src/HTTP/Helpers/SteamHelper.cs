@@ -11,7 +11,7 @@ public static class SteamHelper
 {
     public static async ValueTask<SteamItemsRecord?> GetSteamItems(ulong steamId, bool verified)
     {
-        var client = new HttpClient();
+        using var client = new HttpClient();
 
         var request = new HttpRequestMessage
         {
