@@ -10,17 +10,18 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Autofac" Version="9.1.0" />
-      <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="11.0.0" />
-      <PackageReference Include="Discord.Net" Version="3.18.0" />
-      <PackageReference Include="Discord.Net.WebSocket" Version="3.18.0" />
-      <PackageReference Include="GenHTTP.Modules.Webservices" Version="10.4.2" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.3">
+      <PackageReference Include="Autofac" Version="9.3.4" />
+      <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="11.0.2" />
+      <PackageReference Include="Discord.Net" Version="3.20.1" />
+      <PackageReference Include="Discord.Net.WebSocket" Version="3.20.1" />
+      <PackageReference Include="GenHTTP.Modules.Webservices" Version="11.0.4" />
+      <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="5.9.0" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.12">
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         <PrivateAssets>all</PrivateAssets>
       </PackageReference>
-		<PackageReference Include="GenHTTP.Core" Version="10.4.2" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.3" />
+	  <PackageReference Include="GenHTTP.Core" Version="11.0.4" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.12" />
     </ItemGroup>
 
     <ItemGroup>

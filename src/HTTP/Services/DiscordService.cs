@@ -49,9 +49,11 @@ public class DiscordService
     {
         // Request body requires '?code=' at the end as this is how Discord passes the codes.
         // 'code' is used by OAuth2 to fetch a user token.
-        if (!request.Query.TryGetValue("code", out var code))
+        if (!request.Header.Query.ContainsKey("code"))
             return await request.BuildJsonResponse(ResponseStatus.BadRequest, new MessageRecord("Authentication code was not found in the query, please use the link found on Discord to try again."));
 
+        var code = request.Header.Query.GetEntry("code");
+        
         // This HttpClient is used to interact with the token itself.
         // This client is authenticated using the bot's information.
         using var botAuthenticatedClient = new HttpClient();
@@ -59,7 +61,7 @@ public class DiscordService
         botAuthenticatedClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", base64Auth);
         
         // Exchanges code for a user token.
-        var token = await ExchangeUserToken(botAuthenticatedClient, code);
+        var token = await ExchangeUserToken(botAuthenticatedClient, code!);
         
         if (token == null)
             return await request.BuildJsonResponse(ResponseStatus.BadRequest, new MessageRecord("Authentication failed, the data submitted to Discord's server is invalid. This will happen if you refresh the page. Please use the link found on Discord to try again."));
@@ -174,7 +176,11 @@ public class DiscordService
         KeyValuePair<string, string>[] tokenBodyPairs = [
             new ("code", code), // This is the code returned by Discord during the first OAuth2 step.
             new ("grant_type", "authorization_code"),
+            #if RELEASE
             new ("redirect_uri", "https://discordbot.smartlydressedgames.com/oauth2")
+            #elif DEBUG
+            new ("redirect_uri", "http://graybad1.net:8080/oauth2")
+            #endif
         ];
 
         // Formats the body with 'x-www-form-urlencoded'

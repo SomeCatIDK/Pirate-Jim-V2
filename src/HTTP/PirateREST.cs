@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Security.Cryptography.X509Certificates;
+using GenHTTP.Api.Infrastructure;
 using GenHTTP.Engine.Internal;
 using GenHTTP.Modules.ErrorHandling;
 using GenHTTP.Modules.Layouting;
@@ -20,7 +21,7 @@ public static class PirateREST
         
 #if RELEASE
         //TODO: This should not be hardcoded, but it will remain this way during testing.
-        var certificate = new X509Certificate2("/etc/letsencrypt/live/discordbot.smartlydressedgames.com/certificate.pfx");
+        var certificate = X509CertificateLoader.LoadCertificateFromFile("/etc/letsencrypt/live/discordbot.smartlydressedgames.com/certificate.pfx");
 #endif
         
         var testService = Layout.Create()
@@ -37,13 +38,12 @@ public static class PirateREST
             .Development()
 #endif
             .Handler(testService)
-            .Console()
             .Defaults()
 #if DEBUG
             .Port(8080)
 #elif RELEASE
             .Bind(IPAddress.Any, 80)
-            .Bind(IPAddress.Any, 443, certificate)
+            .Bind(IPAddress.Any, 443, CertificateProvider.From(certificate))
 #endif
             .RunAsync().AsTask().GetAwaiter().GetResult();
     }
