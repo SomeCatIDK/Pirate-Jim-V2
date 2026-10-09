@@ -25,8 +25,8 @@ public sealed class PirateJim
     {
         var discordConfig = new DiscordSocketConfig
         {
-            GatewayIntents = GatewayIntents.Guilds | GatewayIntents.GuildMessages | GatewayIntents.GuildMembers | GatewayIntents.MessageContent,
-            AlwaysDownloadUsers = true
+            GatewayIntents = GatewayIntents.Guilds | GatewayIntents.GuildMessages | GatewayIntents.MessageContent,
+            //AlwaysDownloadUsers = true
         };
 
         DiscordClient = new DiscordSocketClient(discordConfig);
